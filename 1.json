@@ -1,0 +1,510 @@
+[
+  {
+    "cpuInfo": {
+      "cpuUsage": 0,
+      "cpuCount": 4,
+      "cpuModel": "Cortex-A55"
+    },
+    "memInfo": {
+      "totalMemMb": 3925.37,
+      "usedMemMb": 3164.68,
+      "freeMemMb": 760.69,
+      "usedMemPercentage": 80.62,
+      "freeMemPercentage": 19.38
+    },
+    "driveInfo": {
+      "totalGb": "27.7",
+      "usedGb": "20.5",
+      "freeGb": "7.2",
+      "usedPercentage": "74.0",
+      "freePercentage": "26.0"
+    },
+    "netstatInfo": {
+      "total": {
+        "inputMb": 0.04,
+        "outputMb": 0.04
+      },
+      "eth0": {
+        "inputMb": 0.02,
+        "outputMb": 0.01
+      },
+      "wg0": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-b59ec7d81761": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-45ae1ccaf636": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "docker0": {
+        "inputMb": 0,
+        "outputMb": 0.01
+      },
+      "br-98f7c907f28a": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth3bbacde@if13": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth3e01bd4@if15": {
+        "inputMb": 0,
+        "outputMb": 0.01
+      },
+      "veth06325f3@if19": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgc": {
+        "inputMb": 0.02,
+        "outputMb": 0.01
+      },
+      "veth3ce7cc6@if48": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth7dc57c1@if50": {
+        "inputMb": 0,
+        "outputMb": 0
+      }
+    },
+    "osInfo": {
+      "type": "Linux",
+      "platform": "linux",
+      "release": "6.1.28-rockchip64",
+      "ip": "192.168.0.6",
+      "hostname": "panther-x2",
+      "arch": "arm64",
+      "uptime": 2966221.15
+    },
+    "openedCount": 0,
+    "ipInfo": {
+      "status": "success",
+      "country": "中国",
+      "countryCode": "CN",
+      "region": "GD",
+      "regionName": "广东",
+      "city": "小楼",
+      "zip": "",
+      "lat": 23.379,
+      "lon": 113.763,
+      "timezone": "Asia/Shanghai",
+      "isp": "Chinanet",
+      "org": "Chinanet GD",
+      "as": "AS4134 CHINANET-BACKBONE",
+      "query": "119.135.235.84"
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuUsage": 3.8,
+      "cpuCount": 4,
+      "cpuModel": "unknown"
+    },
+    "memInfo": {
+      "totalMemMb": 989.43,
+      "usedMemMb": 662.19,
+      "freeMemMb": 327.24,
+      "usedMemPercentage": 66.93,
+      "freeMemPercentage": 33.07
+    },
+    "driveInfo": {
+      "totalGb": "6.8",
+      "usedGb": "3.6",
+      "freeGb": "3.1",
+      "usedPercentage": "53.7",
+      "freePercentage": "46.3"
+    },
+    "netstatInfo": {
+      "total": {
+        "inputMb": 0.02,
+        "outputMb": 0.02
+      },
+      "eth0": {
+        "inputMb": 0.01,
+        "outputMb": 0.01
+      },
+      "wgc": {
+        "inputMb": 0.01,
+        "outputMb": 0.01
+      },
+      "wgp": {
+        "inputMb": 0,
+        "outputMb": 0
+      }
+    },
+    "osInfo": {
+      "type": "Linux",
+      "platform": "linux",
+      "release": "6.1.38-meson",
+      "ip": "192.168.31.50",
+      "hostname": "onecloud",
+      "arch": "arm",
+      "uptime": 3274216.77
+    },
+    "openedCount": 0,
+    "ipInfo": {
+      "status": "success",
+      "country": "中国",
+      "countryCode": "CN",
+      "region": "ZJ",
+      "regionName": "浙江省",
+      "city": "杭州",
+      "zip": "",
+      "lat": 30.2994,
+      "lon": 120.1612,
+      "timezone": "Asia/Shanghai",
+      "isp": "China Mobile Communications Corporation",
+      "org": "China Mobile Communications Corporation",
+      "as": "AS56041 China Mobile communications corporation",
+      "query": "112.10.227.24"
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuUsage": 1.27,
+      "cpuCount": 4,
+      "cpuModel": "unknown"
+    },
+    "memInfo": {
+      "totalMemMb": 989.43,
+      "usedMemMb": 684.54,
+      "freeMemMb": 304.89,
+      "usedMemPercentage": 69.19,
+      "freeMemPercentage": 30.81
+    },
+    "driveInfo": {
+      "totalGb": "6.8",
+      "usedGb": "5.4",
+      "freeGb": "1.4",
+      "usedPercentage": "79.5",
+      "freePercentage": "20.5"
+    },
+    "netstatInfo": {
+      "total": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "eth0": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgc": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgp": {
+        "inputMb": 0,
+        "outputMb": 0
+      }
+    },
+    "osInfo": {
+      "type": "Linux",
+      "platform": "linux",
+      "release": "6.1.38-meson",
+      "ip": "192.168.31.237",
+      "hostname": "onecloud",
+      "arch": "arm",
+      "uptime": 3274216.96
+    },
+    "openedCount": 0,
+    "ipInfo": {
+      "status": "success",
+      "country": "中国",
+      "countryCode": "CN",
+      "region": "ZJ",
+      "regionName": "浙江省",
+      "city": "杭州",
+      "zip": "",
+      "lat": 30.2994,
+      "lon": 120.1612,
+      "timezone": "Asia/Shanghai",
+      "isp": "China Mobile Communications Corporation",
+      "org": "China Mobile Communications Corporation",
+      "as": "AS56041 China Mobile communications corporation",
+      "query": "112.10.227.24"
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuUsage": 1.27,
+      "cpuCount": 4,
+      "cpuModel": "unknown"
+    },
+    "memInfo": {
+      "totalMemMb": 989.43,
+      "usedMemMb": 655.16,
+      "freeMemMb": 334.27,
+      "usedMemPercentage": 66.22,
+      "freeMemPercentage": 33.78
+    },
+    "driveInfo": {
+      "totalGb": "6.8",
+      "usedGb": "6.0",
+      "freeGb": "0.7",
+      "usedPercentage": "89.2",
+      "freePercentage": "10.8"
+    },
+    "netstatInfo": {
+      "total": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "eth0": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgc": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgp": {
+        "inputMb": 0,
+        "outputMb": 0
+      }
+    },
+    "osInfo": {
+      "type": "Linux",
+      "platform": "linux",
+      "release": "6.1.38-meson",
+      "ip": "192.168.31.174",
+      "hostname": "onecloud",
+      "arch": "arm",
+      "uptime": 3274217.25
+    },
+    "openedCount": 0,
+    "ipInfo": {
+      "status": "success",
+      "country": "中国",
+      "countryCode": "CN",
+      "region": "ZJ",
+      "regionName": "浙江省",
+      "city": "杭州",
+      "zip": "",
+      "lat": 30.2994,
+      "lon": 120.1612,
+      "timezone": "Asia/Shanghai",
+      "isp": "China Mobile Communications Corporation",
+      "org": "China Mobile Communications Corporation",
+      "as": "AS56041 China Mobile communications corporation",
+      "query": "112.10.227.24"
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuUsage": 3.7,
+      "cpuCount": 4,
+      "cpuModel": "unknown"
+    },
+    "memInfo": {
+      "totalMemMb": 989.43,
+      "usedMemMb": 673.42,
+      "freeMemMb": 316.01,
+      "usedMemPercentage": 68.06,
+      "freeMemPercentage": 31.94
+    },
+    "driveInfo": {
+      "totalGb": "6.8",
+      "usedGb": "5.4",
+      "freeGb": "1.4",
+      "usedPercentage": "79.1",
+      "freePercentage": "20.9"
+    },
+    "netstatInfo": {
+      "total": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "eth0": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgc": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgp": {
+        "inputMb": 0,
+        "outputMb": 0
+      }
+    },
+    "osInfo": {
+      "type": "Linux",
+      "platform": "linux",
+      "release": "6.1.38-meson",
+      "ip": "192.168.31.23",
+      "hostname": "onecloud",
+      "arch": "arm",
+      "uptime": 3274217.53
+    },
+    "openedCount": 0,
+    "ipInfo": {
+      "status": "success",
+      "country": "中国",
+      "countryCode": "CN",
+      "region": "ZJ",
+      "regionName": "浙江省",
+      "city": "杭州",
+      "zip": "",
+      "lat": 30.2994,
+      "lon": 120.1612,
+      "timezone": "Asia/Shanghai",
+      "isp": "China Mobile Communications Corporation",
+      "org": "China Mobile Communications Corporation",
+      "as": "AS56041 China Mobile communications corporation",
+      "query": "112.10.227.24"
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuUsage": 0,
+      "cpuCount": 4,
+      "cpuModel": "Intel(R) Core(TM) i5-3210M CPU @ 2.50GHz"
+    },
+    "memInfo": {
+      "totalMemMb": 12173.59,
+      "usedMemMb": 8620.49,
+      "freeMemMb": 3553.1,
+      "usedMemPercentage": 70.81,
+      "freeMemPercentage": 29.19
+    },
+    "driveInfo": {},
+    "netstatInfo": {},
+    "osInfo": {
+      "type": "Windows_NT",
+      "platform": "win32",
+      "release": "10.0.14393",
+      "ip": "192.168.2.194",
+      "hostname": "DESKTOP-F32KT5H",
+      "arch": "x64",
+      "uptime": 2337074.875
+    },
+    "openedCount": 0,
+    "ipInfo": {
+      "status": "success",
+      "country": "中国",
+      "countryCode": "CN",
+      "region": "ZJ",
+      "regionName": "浙江省",
+      "city": "杭州",
+      "zip": "",
+      "lat": 30.2994,
+      "lon": 120.1612,
+      "timezone": "Asia/Shanghai",
+      "isp": "China Mobile Communications Corporation",
+      "org": "China Mobile Communications Corporation",
+      "as": "AS56041 China Mobile communications corporation",
+      "query": "112.10.227.24"
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuUsage": 0,
+      "cpuCount": 1,
+      "cpuModel": "Intel(R) Xeon(R) Platinum 8255C CPU @ 2.50GHz"
+    },
+    "memInfo": {
+      "totalMemMb": 1982.78,
+      "usedMemMb": 1586.6,
+      "freeMemMb": 396.18,
+      "usedMemPercentage": 80.02,
+      "freeMemPercentage": 19.98
+    },
+    "driveInfo": {
+      "totalGb": "56.5",
+      "usedGb": "37.5",
+      "freeGb": "19.0",
+      "usedPercentage": "66.3",
+      "freePercentage": "33.7"
+    },
+    "netstatInfo": {
+      "total": {
+        "inputMb": 0.04,
+        "outputMb": 0.04
+      },
+      "eth0": {
+        "inputMb": 0.02,
+        "outputMb": 0.02
+      },
+      "docker0": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-f2a13aa736d9": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-980ae395f6ac": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth3fb5b0d@if379": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-14ec1ed5bc07": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth366a557@if386": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-59913fdf1d06": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-4b9f31d05542": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth7100f4e@if442": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth147eb68@if224": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth3600d5b@if226": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wg0": {
+        "inputMb": 0.02,
+        "outputMb": 0.02
+      }
+    },
+    "osInfo": {
+      "type": "Linux",
+      "platform": "linux",
+      "release": "5.4.0-96-generic",
+      "ip": "10.0.4.7",
+      "hostname": "VM-4-7-ubuntu",
+      "arch": "x64",
+      "uptime": 28341231.49
+    },
+    "openedCount": 0,
+    "ipInfo": {
+      "status": "success",
+      "country": "中国",
+      "countryCode": "CN",
+      "region": "SH",
+      "regionName": "上海",
+      "city": "上海",
+      "zip": "",
+      "lat": 31.2304,
+      "lon": 121.474,
+      "timezone": "Asia/Shanghai",
+      "isp": "EuroNet Internet",
+      "org": "Euronet Communications B.V.",
+      "as": "AS45090 Shenzhen Tencent Computer Systems Company Limited",
+      "query": "81.68.67.72"
+    }
+  }
+]

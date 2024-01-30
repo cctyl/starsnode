@@ -1,0 +1,407 @@
+
+<head>
+<meta charset="utf-8">
+  <script type="text/javascript" src="./js/vue.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="./css/ele.css">
+
+
+  <!-- 引入组件库 -->
+  <script type="text/javascript" src="./js/ele.js"></script>
+  <style>
+    .field-detail {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field-detail h2 {
+      font-weight: 600;
+      font-size: 16px;
+      margin: 0px 0 8px 0;
+    }
+
+    .field-detail h3 span {
+      font-weight: 600;
+      color: #797979;
+    }
+
+    .field-detail span {
+      display: inline-block;
+      margin: 4px 0;
+    }
+
+    .host-card {
+      margin: 0px 30px 20px;
+      transition: all 0.5s;
+      position: relative;
+    }
+
+    .host-card:hover {
+      box-shadow: 0px 0px 15px rgba(6, 30, 37, 0.5);
+    }
+
+    .host-card .host-state {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+
+    .host-card .host-state span {
+      font-size: 8px;
+      transform: scale(0.9);
+      display: inline-block;
+      padding: 3px 5px;
+    }
+
+    .host-card .host-state .online {
+      color: #009933;
+      background-color: #e8fff3;
+    }
+
+    .host-card .host-state .offline {
+      color: #FF0033;
+      background-color: #fff5f8;
+    }
+
+    .host-card .info {
+      display: flex;
+      align-items: center;
+      height: 50px;
+    }
+
+    .host-card .info > div {
+      flex: 1;
+    }
+
+    .host-card .info .field {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .host-card .info .field .svg-icon {
+      width: 25px;
+      height: 25px;
+      color: #1989fa;
+      cursor: pointer;
+    }
+
+    .host-card .info .field .fields {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .host-card .info .field .fields span {
+      padding: 3px 0;
+      margin-left: 5px;
+      font-weight: 600;
+      font-size: 13px;
+      color: #595959;
+    }
+
+    .host-card .info .field .fields .name {
+      display: inline-block;
+      height: 19px;
+      cursor: pointer;
+    }
+
+    .host-card .info .field .fields .name:hover {
+      text-decoration-line: underline;
+      text-decoration-color: #1989fa;
+    }
+
+    .host-card .info .field .fields .name:hover .svg-icon {
+      display: inline-block;
+    }
+
+    .host-card .info .field .fields .name .svg-icon {
+      display: none;
+      width: 13px;
+      height: 13px;
+    }
+
+    .host-card .info .web-ssh  {
+      margin-left: -5px;
+    }
+
+  </style>
+
+</head>
+<body>
+<div id="app">
+  <div class="item" v-for="(item, i) in devList">
+    <el-card shadow="always" class="host-card">
+
+<!--
+    <div class="field-detail">
+        <h2>位置信息</h2>
+        <h3><span>详细:</span> {{ ipInfo(i).country || '&#45;&#45;' }} {{ ipInfo(i).regionName }}</h3>
+        &lt;!&ndash; <h3><span>详细:</span> {{ ipInfo(i).country || '&#45;&#45;' }} {{ ipInfo(i).regionName }} {{ ipInfo(i).city }}</h3> &ndash;&gt;
+        &lt;!&ndash; <h3><span>IP:</span> {{ hostIp }}</h3> &ndash;&gt;
+        <h3><span>提供商:</span> {{ ipInfo(i).isp || '&#45;&#45;' }}</h3>
+        <h3><span>线路:</span> {{ ipInfo(i).as || '&#45;&#45;' }}</h3>
+      </div>
+      <div class="field-detail">
+        <h2>系统</h2>
+        <h3><span>名称:</span> {{ osInfo(i).hostname }}</h3>
+        <h3><span>类型:</span> {{ osInfo(i).type }}</h3>
+        <h3><span>架构:</span> {{ osInfo(i).arch }}</h3>
+        <h3><span>平台:</span> {{ osInfo(i).platform }}</h3>
+        <h3><span>版本:</span> {{ osInfo(i).release }}</h3>
+        <h3><span>开机时长:</span> {{ formatTime(osInfo(i).uptime) }}</h3>
+        <h3><span>到期时间:</span> {{ expiredTime(i) }}</h3>
+        <h3><span>本地IP:</span> {{ osInfo(i).ip }}</h3>
+        <h3><span>连接数:</span> {{ openedCount(i) || 0 }}</h3>
+      </div>
+      <div class="field-detail">
+        <h2>CPU</h2>
+        <h3><span>利用率:</span> {{ cpuInfo.cpuUsage }}%</h3>
+        <h3><span>物理核心:</span> {{ cpuInfo.cpuCount }}</h3>
+        <h3><span>型号:</span> {{ cpuInfo.cpuModel }}</h3>
+      </div>
+      <div class="field-detail">
+        <h2>内存</h2>
+        <h3><span>总大小:</span> {{ toFixed(memInfo(i).totalMemMb / 1024) }} GB</h3>
+        <h3><span>已使用:</span> {{ toFixed(memInfo(i).usedMemMb / 1024) }} GB</h3>
+        <h3><span>占比:</span> {{ toFixed(memInfo(i).usedMemPercentage) }}%</h3>
+        <h3><span>空闲:</span> {{ toFixed(memInfo(i).freeMemMb / 1024) }} GB</h3>
+      </div>
+      <div class="field-detail">
+        <h2>存储</h2>
+        <h3><span>总空间:</span> {{ driveInfo(i).totalGb || '&#45;&#45;' }} GB</h3>
+        <h3><span>已使用:</span> {{ driveInfo(i).usedGb || '&#45;&#45;' }} GB</h3>
+        <h3><span>剩余:</span> {{ driveInfo(i).freeGb || '&#45;&#45;' }} GB</h3>
+        <h3><span>占比:</span> {{ driveInfo(i).usedPercentage || '&#45;&#45;' }}%</h3>
+      </div>
+      <div class="field-detail">
+        <h2>网卡</h2>
+        &lt;!&ndash; <h3>
+          <span>实时流量</span>
+          <div>↑ {{ toFixed(netstatInfo(i).netTotal?.outputMb) || 0 }}MB / s</div>
+          <div>↓ {{ toFixed(netstatInfo(i).netTotal?.inputMb) || 0 }}MB / s</div>
+        </h3> &ndash;&gt;
+        <div
+                v-for="(value, key) in netstatInfo(i).netCards"
+                :key="key"
+                style="display: flex; flex-direction: column;"
+        >
+          <h3>
+            <span>{{ key }}</span>
+            <div>↑ {{ formatNetSpeed(value?.outputMb) || 0 }}</div>
+            <div>↓ {{ formatNetSpeed(value?.inputMb) || 0 }}</div>
+          </h3>
+        </div>
+      </div>
+
+      -->
+
+
+
+      <div class="host-state">
+        <span v-if="isError(i)" class="offline">未连接</span>
+        <span v-else class="online">已连接 {{ ping(i) }}</span>
+      </div>
+
+
+      <div class="info">
+        <div class="weizhi field">
+
+          <div class="fields">
+          <span class="name" @click="handleUpdate">
+            {{ name(i) || '--' }}
+            <i class="iconfont icon-xiugai svg-icon"></i>
+          </span>
+            <span>{{ osInfo(i)?.type || '--' }}</span>
+          </div>
+        </div>
+        <div class="weizhi field">
+
+          <div class="fields">
+            <span>{{ `${ipInfo(i)?.country || '--' } ${ipInfo(i)?.regionName || '--'}` }}</span>
+            <!-- <span>{{ `${ipInfo(i)?.country || '--' } ${ipInfo(i)?.regionName || '--'} ${ipInfo(i)?.city || '--'}` }}</span> -->
+            <span>{{ hostIp(i) }}</span>
+          </div>
+        </div>
+        <div class="cpu field">
+
+          <div class="fields">
+            <span :style="{color: setColor(cpuInfo(i).cpuUsage)}">{{ cpuInfo(i).cpuUsage || '0' || '--' }}%</span>
+            <span>{{ cpuInfo(i).cpuCount || '--' }} 核心</span>
+          </div>
+        </div>
+        <div class="ram field">
+
+          <div class="fields">
+            <span
+              :style="{color: setColor(memInfo(i).usedMemPercentage)}">{{ toFixed(memInfo(i).usedMemPercentage) }}%</span>
+            <span>{{ toFixed(memInfo(i).usedMemMb / 1024) }} | {{ toFixed(memInfo(i).totalMemMb / 1024) }} GB</span>
+          </div>
+        </div>
+        <div class="yingpan field">
+
+          <div class="fields">
+            <span
+              :style="{color: setColor(driveInfo(i).usedPercentage)}">{{ driveInfo(i).usedPercentage || '--' }}%</span>
+            <span>{{ driveInfo(i).usedGb || '--' }} | {{ driveInfo(i).totalGb || '--' }} GB</span>
+          </div>
+        </div>
+        <div class="wangluo field">
+
+          <div class="fields">
+            <span>↑ {{ formatNetSpeed(netstatInfo(i).netTotal?.outputMb) || 0 }}</span>
+            <span>↓ {{ formatNetSpeed(netstatInfo(i).netTotal?.inputMb) || 0 }}</span>
+          </div>
+        </div>
+
+      </div>
+
+    </el-card>
+  </div>
+
+
+</div>
+
+
+</body>
+<script type="text/javascript">
+
+  const ws = new WebSocket("ws://10.0.8.1:6080?token=abcdef&type=view&endpointName=bb");
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        devList: [],
+      }
+    },
+    mounted() {
+      /**
+       * 连接成功
+       * @param ev
+       */
+      ws.onopen = this.wsOpen;
+      /**
+       * 接收到消息
+       * @param ev
+       */
+      ws.onmessage = this.wsMessage;
+      ws.onclose =this.wsClose;
+      ws.onerror = this.wsError;
+    },
+    computed: {},
+    methods: {
+      hostIp(i) {
+        let ip = this.ipInfo(i)?.query || this.host(i) || '--'
+        try {
+          // let formatIp = ip.replace(/(?<=\d*\.\d*\.)(\d*)/g, (matchStr) => matchStr.replace(/\d/g, '*'))
+          let formatIp = ip.replace(/\d/g, '*').split('.').map((item) => item.padStart(3, '*')).join('.')
+          return this.hiddenIp ? formatIp : ip
+        } catch (error) {
+          return ip
+        }
+      },
+      host(i) {
+        return this.devList[i]?.host
+      },
+      name(i) {
+        return this.devList[i]?.name
+      },
+      ping(i) {
+        return this.devList[i]?.ping || ''
+      },
+      expiredTime(i) {
+        return this.formatTimestamp(this.devList[i]?.expired, 'date')
+      },
+      consoleUrl(i) {
+        return this.devList[i]?.consoleUrl
+      },
+      ipInfo(i) {
+        return this.devList[i]?.ipInfo || {}
+      },
+      isError(i) {
+        return !Boolean(this.devList[i]?.osInfo) // 没获取系统信息默认未连接
+      },
+      cpuInfo(i) {
+        return this.devList[i]?.cpuInfo || {}
+      },
+      memInfo(i) {
+        return this.devList[i]?.memInfo || {}
+      },
+      osInfo(i) {
+        return this.devList[i]?.osInfo || {}
+      },
+      driveInfo(i) {
+        return this.devList[i]?.driveInfo || {}
+      },
+      netstatInfo(i) {
+        let {total: netTotal, ...netCards} = this.devList[i]?.netstatInfo || {}
+        return {netTotal, netCards: netCards || {}}
+      },
+      openedCount(i) {
+        return this.devList[i]?.openedCount || 0
+      },
+      toFixed(value, count = 1) {
+        value = Number(value)
+        return isNaN(value) ? '--' : value.toFixed(count)
+      },
+      formatTime(second = 0) {
+        let day = Math.floor(second / 60 / 60 / 24)
+        let hour = Math.floor(second / 60 / 60 % 24)
+        let minute = Math.floor(second / 60 % 60)
+        return `${day}天${hour}时${minute}分`
+      },
+      formatNetSpeed(netSpeedMB) {
+        netSpeedMB = Number(netSpeedMB) || 0
+        if (netSpeedMB >= 1) return `${netSpeedMB.toFixed(2)} MB/s`
+        return `${(netSpeedMB * 1024).toFixed(1)} KB/s`
+      },
+      // format: time OR date
+      formatTimestamp: (timestamp, format = 'time') => {
+        if (typeof (timestamp) !== 'number') return '--'
+        let date = new Date(timestamp)
+        let padZero = (num) => String(num).padStart(2, '0')
+        let year = date.getFullYear()
+        let mounth = padZero(date.getMonth() + 1)
+        let day = padZero(date.getDate())
+        let hours = padZero(date.getHours())
+        let minute = padZero(date.getMinutes())
+        let second = padZero(date.getSeconds())
+        switch (format) {
+          case 'date':
+            return `${year}-${mounth}-${day}`
+          case 'time':
+            return `${year}-${mounth}-${day} ${hours}:${minute}:${second}`
+          default:
+            return `${year}-${mounth}-${day} ${hours}:${minute}:${second}`
+        }
+      },
+
+      setColor(num) {
+        num = Number(num)
+        return num ? (num < 80 ? '#595959' : ((num >= 80 && num < 90) ? '#FF6600' : '#FF0000')) : '#595959'
+      },
+      handleUpdate() {
+        let {name, host, hostInfo: {expired, expiredNotify, group, consoleUrl, remark}} = this
+        this.$emit('update-host', {name, host, expired, expiredNotify, group, consoleUrl, remark})
+      },
+      handleToConsole() {
+        window.open(this.consoleUrl)
+      },
+      wsOpen(ev){
+        console.log("连接打开")
+      },
+      wsClose(ev){
+        console.log("连接断开")
+      },
+      wsError(ev){
+        console.error(ev);
+        console.log("连接异常，原因：" + JSON.stringify(ev))
+      },
+      wsMessage(ev){
+        let data = JSON.parse(ev.data);
+        console.log(data)
+        this.devList = data;
+      },
+    }
+  })
+</script>
+
