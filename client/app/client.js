@@ -5,7 +5,7 @@ const getOsData = require('./utils/os-data');
 const func = require('./utils/functions');
 let receiveMsg = false;
 
-//获得设备名
+//获得设备名 更新
 const endpointName = config.endpointName ? config.endpointName : func.guid();
 
 let ws;
