@@ -41,6 +41,11 @@ async function netstatInfo() {
   return netstatInfo === 'not supported' ? {} : netstatInfo
 }
 
+async function netInterface() {
+  let result = await os.networkInterfaces();
+  return result;
+}
+
 async function osInfo() {
   let type = os.type()
   let platform = os.platform()
@@ -73,6 +78,7 @@ module.exports = async () => {
       memInfo: await memInfo(),
       driveInfo: await driveInfo(),
       netstatInfo: await netstatInfo(),
+      netInterface: await netInterface(),
       osInfo: await osInfo(),
       openedCount: await openedCount()
     }

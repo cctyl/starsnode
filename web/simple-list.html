@@ -274,6 +274,68 @@
                             "uptime": 87328.703,
                             "openedCount": 0,
                         },
+                        "netInterface":{
+                            '12': [
+                                {
+                                    address: '10.0.9.12',
+                                    netmask: '255.255.255.255',
+                                    family: 'IPv4',
+                                    mac: '00:00:00:00:00:00',
+                                    internal: false,
+                                    cidr: '10.0.9.12/32'
+                                }
+                            ],
+                            client3: [
+                                {
+                                    address: '10.0.8.8',
+                                    netmask: '255.255.255.255',
+                                    family: 'IPv4',
+                                    mac: '00:00:00:00:00:00',
+                                    internal: false,
+                                    cidr: '10.0.8.8/32'
+                                }
+                            ],
+                            '以太网': [
+                                {
+                                    address: 'fe80::a490:1e42:43f2:fefc',
+                                    netmask: 'ffff:ffff:ffff:ffff::',
+                                    family: 'IPv6',
+                                    mac: '00:2b:67:dd:5d:26',
+                                    internal: false,
+                                    cidr: 'fe80::a490:1e42:43f2:fefc/64',
+                                    scopeid: 3
+                                },
+                                {
+                                    address: '192.168.0.70',
+                                    netmask: '255.255.255.0',
+                                    family: 'IPv4',
+                                    mac: '00:2b:67:dd:5d:26',
+                                    internal: false,
+                                    cidr: '192.168.0.70/24'
+                                }
+                            ],
+                            'Loopback Pseudo-Interface 1': [
+                                {
+                                    address: '::1',
+                                    netmask: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
+                                    family: 'IPv6',
+                                    mac: '00:00:00:00:00:00',
+                                    internal: true,
+                                    cidr: '::1/128',
+                                    scopeid: 0
+                                },
+                                {
+                                    address: '127.0.0.1',
+                                    netmask: '255.0.0.0',
+                                    family: 'IPv4',
+                                    mac: '00:00:00:00:00:00',
+                                    internal: true,
+                                    cidr: '127.0.0.1/8'
+                                }
+                            ]
+                        }
+
+
 
                     },
                     {
@@ -374,14 +436,14 @@
              * 连接成功
              * @param ev
              */
-            ws.onopen = this.wsOpen;
+            // ws.onopen = this.wsOpen;
             /**
              * 接收到消息
              * @param ev
              */
-            ws.onmessage = this.wsMessage;
-            ws.onclose = this.wsClose;
-            ws.onerror = this.wsError;
+            // ws.onmessage = this.wsMessage;
+            // ws.onclose = this.wsClose;
+            // ws.onerror = this.wsError;
         },
         computed: {},
         methods: {
