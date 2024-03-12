@@ -171,7 +171,7 @@
         <div class="host-info-box card">
 
 
-            <div class="card-title">设备信息</div>
+            <div class="card-title">设备信息 - {{item.osInfo.hostname}}</div>
             <img :src="item.osInfo.platform=='linux' ? './img/linux.jpg' : './img/win.webp' "  >
             <div class="field-item" v-for="(value,key) in item.osInfo">
                 <span class="field-title">{{dataMap(key)}}</span>
@@ -192,7 +192,7 @@
         <div class="dev-info-box card">
 
 
-            <div class="card-title">图表</div>
+            <div class="card-title">图表 - {{item.osInfo.hostname}}</div>
             <div class="dev-circle-chart">
 
                 <div class="circle-item">
@@ -219,7 +219,7 @@
 
             </div>
 
-            <div v-if="item.netstatInfo.total!=null" class="card-title">网络信息</div>
+            <div v-if="item.netstatInfo.total!=null" class="card-title">网络信息 - {{item.osInfo.hostname}}</div>
             <div class="dev-network-box">
                 <div class="network-item" v-for="(netValue,netKey) in item.netstatInfo">
                     <!--网卡名称-->
