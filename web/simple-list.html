@@ -231,6 +231,19 @@
 
             </div>
 
+
+            <div v-if="Object.getOwnPropertyNames(item.netInterface).length>0" class="card-title">网卡信息 - {{item.osInfo.hostname}}</div>
+            <div class="dev-network-box">
+                <div class="network-item" v-for="(netValue,netKey) in item.netInterface">
+                    <!--网卡名称-->
+                    <span class="net-title">{{netKey}}</span>
+                    <!--上传下载详情-->
+                    <span class="net-field">↓ {{ formatNetSpeed(netValue.inputMb) }}</span>
+                    <span class="net-field">↑ {{ formatNetSpeed(netValue.outputMb) }}</span>
+                </div>
+
+            </div>
+
         </div>
 
     </div>
