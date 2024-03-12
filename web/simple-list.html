@@ -74,6 +74,10 @@
 
         }
 
+        .dev-info-box .box-item {
+            margin-top: 15px;
+        }
+
         .dev-circle-chart {
             display: flex;
 
@@ -154,6 +158,37 @@
             font-size: 15px;
         }
 
+        .dev-net-interface-box {
+            display: flex;
+            padding: 10px;
+            flex-flow: wrap;
+            justify-content: space-around;
+
+        }
+
+        .dev-net-interface-box .net-interface-item .net-title {
+            background-color: #324b75;
+            font-size: 19px;
+            color: #fcfdfd;
+
+        }
+
+        .dev-net-interface-box .net-interface-item span {
+            display: block;
+            font-size: 15px;
+        }
+
+        .dev-net-interface-box .net-interface-item .net-interface-arr  {
+            display: flex;
+
+        }
+
+        .dev-net-interface-box .net-interface-item .net-interface-arr .net-interface-arr-item{
+
+            margin: 10px;
+
+        }
+
     </style>
 
     <!-- 引入组件库 -->
@@ -172,14 +207,14 @@
 
 
             <div class="card-title">设备信息 - {{item.osInfo.hostname}}</div>
-            <img :src="item.osInfo.platform=='linux' ? './img/linux.jpg' : './img/win.webp' "  >
+            <img :src="item.osInfo.platform=='linux' ? './img/linux.jpg' : './img/win.webp' ">
             <div class="field-item" v-for="(value,key) in item.osInfo">
                 <span class="field-title">{{dataMap(key)}}</span>
-                <span class="field-value">{{key==='uptime'?formatTime(value):value}}</span>
+                <span class="field-value">{{key === 'uptime' ? formatTime(value) : value}}</span>
             </div>
             <div class="field-item" v-for="(value,key) in item.ipInfo">
                 <span class="field-title" v-if="value">{{dataMap(key)}}</span>
-                <span class="field-value" v-if="value">{{key==='uptime'?formatTime(value):value}}</span>
+                <span class="field-value" v-if="value">{{key === 'uptime' ? formatTime(value) : value}}</span>
             </div>
             <div v-if="!item.ipInfo">
                 暂无ip信息
@@ -192,57 +227,74 @@
         <div class="dev-info-box card">
 
 
-            <div class="card-title">图表 - {{item.osInfo.hostname}}</div>
-            <div class="dev-circle-chart">
+            <div class="box-item">
+                <div class="card-title">图表 - {{item.osInfo.hostname}}</div>
+                <div class="dev-circle-chart">
 
-                <div class="circle-item">
-                    <span>cpu</span>
-                    <el-progress type="circle" :percentage="item.cpuInfo.cpuUsage"
-                                 :color="getStatus(item.cpuInfo.cpuUsage)"></el-progress>
-                    <span>{{item.cpuInfo.cpuCount}}核心</span>
-                    <span>{{item.cpuInfo.cpuModel}}</span>
+                    <div class="circle-item">
+                        <span>cpu</span>
+                        <el-progress type="circle" :percentage="item.cpuInfo.cpuUsage"
+                                     :color="getStatus(item.cpuInfo.cpuUsage)"></el-progress>
+                        <span>{{item.cpuInfo.cpuCount}}核心</span>
+                        <span>{{item.cpuInfo.cpuModel}}</span>
+                    </div>
+
+                    <div class="circle-item">
+                        <span>磁盘</span>
+                        <el-progress type="circle" :percentage="item.driveInfo.usedPercentage"
+                                     :color="getStatus(item.driveInfo.usedPercentage)"></el-progress>
+                        <span>{{item.driveInfo.usedGb}}/{{item.driveInfo.totalGb}}GB</span>
+                    </div>
+                    <div class="circle-item">
+                        <span>内存</span>
+                        <el-progress type="circle" :percentage="item.memInfo.usedMemPercentage"
+                                     :color="getStatus(item.memInfo.usedMemPercentage)"></el-progress>
+                        <span>{{ formatMen(item.memInfo.usedMemMb) }}/{{formatMen(item.memInfo.totalMemMb)}}</span>
+                    </div>
+
+
                 </div>
-
-                <div class="circle-item">
-                    <span>磁盘</span>
-                    <el-progress type="circle" :percentage="item.driveInfo.usedPercentage"
-                                 :color="getStatus(item.driveInfo.usedPercentage)"></el-progress>
-                    <span>{{item.driveInfo.usedGb}}/{{item.driveInfo.totalGb}}GB</span>
-                </div>
-                <div class="circle-item">
-                    <span>内存</span>
-                    <el-progress type="circle" :percentage="item.memInfo.usedMemPercentage"
-                                 :color="getStatus(item.memInfo.usedMemPercentage)"></el-progress>
-                    <span>{{item.memInfo.usedMemMb}}/{{item.memInfo.totalMemMb}}MB</span>
-                </div>
-
-
-            </div>
-
-            <div v-if="item.netstatInfo.total!=null" class="card-title">网络信息 - {{item.osInfo.hostname}}</div>
-            <div class="dev-network-box">
-                <div class="network-item" v-for="(netValue,netKey) in item.netstatInfo">
-                    <!--网卡名称-->
-                    <span class="net-title">{{netKey}}</span>
-                    <!--上传下载详情-->
-                    <span class="net-field">↓ {{ formatNetSpeed(netValue.inputMb) }}</span>
-                    <span class="net-field">↑ {{ formatNetSpeed(netValue.outputMb) }}</span>
-                </div>
-
             </div>
 
 
-            <div v-if="Object.getOwnPropertyNames(item.netInterface).length>0" class="card-title">网卡信息 - {{item.osInfo.hostname}}</div>
-            <div class="dev-network-box">
-                <div class="network-item" v-for="(netValue,netKey) in item.netInterface">
-                    <!--网卡名称-->
-                    <span class="net-title">{{netKey}}</span>
-                    <!--上传下载详情-->
-                    <span class="net-field">↓ {{ formatNetSpeed(netValue.inputMb) }}</span>
-                    <span class="net-field">↑ {{ formatNetSpeed(netValue.outputMb) }}</span>
-                </div>
+            <div class="box-item">
+                <div v-if="item.netstatInfo.total!=null" class="card-title">网络信息 - {{item.osInfo.hostname}}</div>
+                <div class="dev-network-box">
+                    <div class="network-item" v-for="(netValue,netKey) in item.netstatInfo">
+                        <!--网卡名称-->
+                        <span class="net-title">{{netKey}}</span>
+                        <!--上传下载详情-->
+                        <span class="net-field">↓ {{ formatNetSpeed(netValue.inputMb) }}</span>
+                        <span class="net-field">↑ {{ formatNetSpeed(netValue.outputMb) }}</span>
+                    </div>
 
+                </div>
             </div>
+
+
+            <div class="box-item">
+                <div class="card-title">网卡信息 - {{item.osInfo.hostname}}</div>
+                <div class="dev-net-interface-box">
+                    <div class="net-interface-item" v-for="(netValue,netKey) in item.netInterface">
+                        <!--网卡名称-->
+                        <span class="net-title">{{netKey}}</span>
+
+                        <div class="net-interface-arr">
+                            <div class="net-interface-arr-item" v-for="interfaceItem in netValue">
+
+                                <div class="field-item" v-for="(value,key) in interfaceItem">
+                                    <span class="field-title">{{dataMap(key)}}</span>
+                                    <span class="field-value">{{value}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
 
         </div>
 
@@ -261,96 +313,7 @@
         data: function () {
             return {
                 devList: [
-                    {
-                        "cpuInfo": {
-                            "cpuUsage": 0,
-                            "cpuCount": 16,
-                            "cpuModel": "Intel(R) Core(TM) i7-10875H CPU @ 2.30GHz"
-                        },
-                        "memInfo": {
-                            "totalMemMb": 16290.8,
-                            "usedMemMb": 11160.05,
-                            "freeMemMb": 5130.75,
-                            "usedMemPercentage": 68.51,
-                            "freeMemPercentage": 31.49
-                        },
-                        "driveInfo": {},
-                        "netstatInfo": {},
-                        "osInfo": {
 
-                            "type": "Windows_NT",
-                            "platform": "win32",
-                            "release": "10.0.19042",
-                            "ip": "192.168.0.70",
-                            "hostname": "LAPTOP-8C2UNQL5",
-                            "arch": "x64",
-                            "uptime": 87328.703,
-                            "openedCount": 0,
-                        },
-                        "netInterface":{
-                            '12': [
-                                {
-                                    address: '10.0.9.12',
-                                    netmask: '255.255.255.255',
-                                    family: 'IPv4',
-                                    mac: '00:00:00:00:00:00',
-                                    internal: false,
-                                    cidr: '10.0.9.12/32'
-                                }
-                            ],
-                            client3: [
-                                {
-                                    address: '10.0.8.8',
-                                    netmask: '255.255.255.255',
-                                    family: 'IPv4',
-                                    mac: '00:00:00:00:00:00',
-                                    internal: false,
-                                    cidr: '10.0.8.8/32'
-                                }
-                            ],
-                            '以太网': [
-                                {
-                                    address: 'fe80::a490:1e42:43f2:fefc',
-                                    netmask: 'ffff:ffff:ffff:ffff::',
-                                    family: 'IPv6',
-                                    mac: '00:2b:67:dd:5d:26',
-                                    internal: false,
-                                    cidr: 'fe80::a490:1e42:43f2:fefc/64',
-                                    scopeid: 3
-                                },
-                                {
-                                    address: '192.168.0.70',
-                                    netmask: '255.255.255.0',
-                                    family: 'IPv4',
-                                    mac: '00:2b:67:dd:5d:26',
-                                    internal: false,
-                                    cidr: '192.168.0.70/24'
-                                }
-                            ],
-                            'Loopback Pseudo-Interface 1': [
-                                {
-                                    address: '::1',
-                                    netmask: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
-                                    family: 'IPv6',
-                                    mac: '00:00:00:00:00:00',
-                                    internal: true,
-                                    cidr: '::1/128',
-                                    scopeid: 0
-                                },
-                                {
-                                    address: '127.0.0.1',
-                                    netmask: '255.0.0.0',
-                                    family: 'IPv4',
-                                    mac: '00:00:00:00:00:00',
-                                    internal: true,
-                                    cidr: '127.0.0.1/8'
-                                }
-                            ]
-                        }
-
-
-
-                    },
                     {
                         "cpuInfo": {
                             "cpuUsage": 14.63,
@@ -418,6 +381,47 @@
                             "org": "Chinanet GD",
                             "as": "AS4134 CHINANET-BACKBONE",
                             "query": "119.135.235.28"
+                        },
+                        "netInterface": {
+                            12: [
+                                {
+                                    address: '10.0.9.12',
+                                    netmask: '255.255.255.255',
+                                    family: 'IPv4',
+                                    mac: '00:00:00:00:00:00',
+                                    internal: false,
+                                    cidr: '10.0.9.12/32'
+                                }
+                            ],
+                            client3: [
+                                {
+                                    address: '10.0.8.8',
+                                    netmask: '255.255.255.255',
+                                    family: 'IPv4',
+                                    mac: '00:00:00:00:00:00',
+                                    internal: false,
+                                    cidr: '10.0.8.8/32'
+                                }
+                            ],
+                            '以太网': [
+                                {
+                                    address: 'fe80::a490:1e42:43f2:fefc',
+                                    netmask: 'ffff:ffff:ffff:ffff::',
+                                    family: 'IPv6',
+                                    mac: '00:2b:67:dd:5d:26',
+                                    internal: false,
+                                    cidr: 'fe80::a490:1e42:43f2:fefc/64',
+                                    scopeid: 3
+                                },
+                                {
+                                    address: '192.168.0.70',
+                                    netmask: '255.255.255.0',
+                                    family: 'IPv4',
+                                    mac: '00:2b:67:dd:5d:26',
+                                    internal: false,
+                                    cidr: '192.168.0.70/24'
+                                }
+                            ],
                         }
                     }
                 ],
@@ -433,13 +437,13 @@
                     "isp": "isp提供商",
                     "query": "真实ip",
                     "openedCount": "连接人数",
-                  "type": "操作系统",
-                  "platform": "平台",
-                  "release": "版本",
+                    "type": "操作系统",
+                    "platform": "平台",
+                    "release": "版本",
 
-                  "hostname": "主机名",
-                  "arch": "cpu架构",
-                  "uptime": "运行时间"
+                    "hostname": "主机名",
+                    "arch": "cpu架构",
+                    "uptime": "运行时间"
                 }
 
             }
@@ -449,14 +453,14 @@
              * 连接成功
              * @param ev
              */
-            // ws.onopen = this.wsOpen;
+            ws.onopen = this.wsOpen;
             /**
              * 接收到消息
              * @param ev
              */
-            // ws.onmessage = this.wsMessage;
-            // ws.onclose = this.wsClose;
-            // ws.onerror = this.wsError;
+            ws.onmessage = this.wsMessage;
+            ws.onclose = this.wsClose;
+            ws.onerror = this.wsError;
         },
         computed: {},
         methods: {
@@ -514,6 +518,16 @@
                     default:
                         return `${year}-${mounth}-${day} ${hours}:${minute}:${second}`
                 }
+            },
+
+            formatMen(memSize) {
+                if (memSize > 1024) {
+                    return (memSize / 1024).toFixed(1) + 'GB';
+                } else {
+                    return memSize + 'MB';
+                }
+
+
             },
 
             getStatus(progress) {
