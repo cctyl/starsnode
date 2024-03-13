@@ -53,34 +53,26 @@
             width: 100%;
             margin: 10px 0px;
 
-
             display: flex;
         }
+
+        /*左侧设备信息*/
 
         .host-info-box {
             /*flex: 1;*/
             padding: 10px;
             display: flex;
             flex-direction: column;
-
-
             width: 260px;
         }
 
         .dev-info-box {
             flex: 1;
             padding: 10px;
-
-
         }
 
         .dev-info-box .box-item {
             margin-top: 15px;
-        }
-
-        .dev-circle-chart {
-            display: flex;
-
         }
 
 
@@ -107,14 +99,35 @@
             margin-left: 20px;
         }
 
+        /*环形图表*/
+        .dev-circle-chart {
+            display: flex;
+
+        }
+
         .dev-circle-chart .circle-item {
             flex: 1;
 
         }
 
-        .dev-network-box .circle-item .el-progress__text {
 
+        .dev-circle-chart .speed{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 17px;
+            width: 90px;
+            margin: 30px;
+        }
+        .dev-circle-chart .up{
+            color: magenta;
+        }
+        .dev-circle-chart .down{
+            color: yellow;
+        }
+        .dev-circle-chart .circle-item .el-progress__text {
 
+            color: #fff;
         }
 
         .dev-circle-chart .circle-item span {
@@ -124,6 +137,7 @@
         }
 
 
+        /*网络信息*/
         .dev-network-box {
             display: flex;
             flex-flow: wrap;
@@ -158,6 +172,9 @@
             font-size: 15px;
         }
 
+
+        /*网卡信息*/
+
         .dev-net-interface-box {
             display: flex;
             padding: 10px;
@@ -178,15 +195,47 @@
             font-size: 15px;
         }
 
-        .dev-net-interface-box .net-interface-item .net-interface-arr  {
+        .dev-net-interface-box .net-interface-item .net-interface-arr {
             display: flex;
 
         }
 
-        .dev-net-interface-box .net-interface-item .net-interface-arr .net-interface-arr-item{
+        .dev-net-interface-box .net-interface-item .net-interface-arr .net-interface-arr-item {
 
             margin: 10px;
 
+        }
+
+
+        /*悬浮按钮*/
+        .float-btn {
+            position: fixed;
+            right: 50px;
+            bottom: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .float-btn .show-txt {
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+
+            color: #fff;
+            text-align: center;
+            -webkit-transition: opacity .3s ease-in-out;
+            transition: opacity .3s ease-in-out;
+
+            display: flex;
+            opacity: 70;
+            background-color: #59a0ff;
         }
 
     </style>
@@ -235,7 +284,7 @@
                         <span>cpu</span>
                         <el-progress type="circle" :percentage="item.cpuInfo.cpuUsage"
                                      :color="getStatus(item.cpuInfo.cpuUsage)"></el-progress>
-                        <span>{{item.cpuInfo.cpuCount}}核心</span>
+                        <span>{{item.cpuInfo.cpuCount}}核心 / {{item.osInfo.arch}}</span>
                         <span>{{item.cpuInfo.cpuModel}}</span>
                     </div>
 
@@ -243,7 +292,7 @@
                         <span>磁盘</span>
                         <el-progress type="circle" :percentage="item.driveInfo.usedPercentage"
                                      :color="getStatus(item.driveInfo.usedPercentage)"></el-progress>
-                        <span>{{item.driveInfo.usedGb}}/{{item.driveInfo.totalGb}}GB</span>
+                        <span>{{item.driveInfo.usedGb}}GB/{{item.driveInfo.totalGb}}GB</span>
                     </div>
                     <div class="circle-item">
                         <span>内存</span>
@@ -252,7 +301,14 @@
                         <span>{{ formatMen(item.memInfo.usedMemMb) }}/{{formatMen(item.memInfo.totalMemMb)}}</span>
                     </div>
 
+                    <div class="speed down" v-if="item.netstatInfo.total">
+                        <span>↓ {{ formatNetSpeed(item.netstatInfo.total.inputMb) }}</span>
 
+
+                    </div>
+                    <div class="speed up"  v-if="item.netstatInfo.total">
+                         <span>↑ {{ formatNetSpeed(item.netstatInfo.total.outputMb) }}</span>
+                    </div>
                 </div>
             </div>
 
@@ -284,7 +340,7 @@
 
                                 <div class="field-item" v-for="(value,key) in interfaceItem">
                                     <span class="field-title">{{dataMap(key)}}</span>
-                                    <span class="field-value">{{value}}</span>
+                                    <span class="field-value" @click="copy(value)">{{value}}</span>
                                 </div>
                             </div>
                         </div>
@@ -300,6 +356,9 @@
 
     </div>
 
+    <div class="float-btn">
+        <span class="show-txt" @click="showIpv6=!showIpv6">{{showIpv6?'IPv4+IPv6':'IPv4'}}</span>
+    </div>
 
 </div>
 
@@ -444,7 +503,8 @@
                     "hostname": "主机名",
                     "arch": "cpu架构",
                     "uptime": "运行时间"
-                }
+                },
+                showIpv6: false,
 
             }
         },
@@ -472,18 +532,6 @@
                 return this.dict[k] ? this.dict[k] : k;
             },
 
-            hostIp(i) {
-                let ip = this.ipInfo(i)?.query || this.host(i) || '--'
-                try {
-                    // let formatIp = ip.replace(/(?<=\d*\.\d*\.)(\d*)/g, (matchStr) => matchStr.replace(/\d/g, '*'))
-                    let formatIp = ip.replace(/\d/g, '*').split('.').map((item) => item.padStart(3, '*')).join('.')
-                    return this.hiddenIp ? formatIp : ip
-                } catch (error) {
-                    return ip
-                }
-            },
-
-
             toFixed(value, count = 1) {
                 value = Number(value)
                 return isNaN(value) ? '--' : value.toFixed(count)
@@ -499,7 +547,7 @@
                 if (netSpeedMB >= 1) return `${netSpeedMB.toFixed(2)} MB/s`
                 return `${(netSpeedMB * 1024).toFixed(1)} KB/s`
             },
-            // format: time OR date
+
             formatTimestamp: (timestamp, format = 'time') => {
                 if (typeof (timestamp) !== 'number') return '--'
                 let date = new Date(timestamp)
@@ -527,12 +575,11 @@
                     return memSize + 'MB';
                 }
 
-
             },
 
             getStatus(progress) {
 
-                if (progress > 70) {
+                if (progress > 70 && progress<90) {
                     return '#dfa238';
                 } else if (progress > 90) {
                     return '#f34c4a';
@@ -553,7 +600,7 @@
             },
             wsMessage(ev) {
                 let data = JSON.parse(ev.data);
-                console.log(data);
+                console.log(data)
                 for (let i = 0; i < data.length; i++) {
                     data[i].osInfo.openedCount = data[i].openedCount;
 
@@ -562,9 +609,47 @@
                     delete data[i].ipInfo.zip;
                     delete data[i].ipInfo.org;
                     delete data[i].ipInfo.as;
+                    delete data[i].osInfo.ip;
+
+
+                    if (this.showIpv6 !== true) {
+                        let keyArr = Object.keys(data[i].netInterface);
+                        let obj = data[i].netInterface;
+                        for (let j = 0; j < keyArr.length; j++) {
+
+                            let key = keyArr[j];
+
+                            let netinterfaceArr = obj[key];
+
+                            obj[key] = netinterfaceArr.filter(function (item) {
+                                return item.family === 'IPv4'
+                            });
+
+
+                            if (obj[key].length === 0) {
+                                delete obj[key];
+                            }
+                        }
+
+
+                    }
                 }
                 this.devList = data;
             },
+
+            copy(str){
+                let copyInput = document.createElement('input');//创建input元素
+                document.body.appendChild(copyInput);//向页面底部追加输入框
+                copyInput.setAttribute('value', str);//添加属性，将url赋值给input元素的value属性
+                copyInput.select();//选择input元素
+                document.execCommand("Copy");//执行复制命令
+                this.$message({
+                    message: "已复制"+str,
+                    type: 'success',
+                    duration:600
+                });
+                copyInput.remove();//删除动态创建的节点
+            }
         }
     })
 </script>
