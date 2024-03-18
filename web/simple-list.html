@@ -600,7 +600,7 @@
             },
             wsMessage(ev) {
                 let data = JSON.parse(ev.data);
-                console.log(data)
+                console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     data[i].osInfo.openedCount = data[i].openedCount;
 
