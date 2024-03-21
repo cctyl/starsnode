@@ -14,6 +14,9 @@ let lock=false;
  * 创建websocket 客户端
  */
 function createWebSocketClient(){
+    if (ws){
+        ws.close();
+    }
     ws = new wsModule.WebSocket(`ws://${config.serverHost}:${config.port}?token=${config.token}&type=dev&endpointName=${endpointName}`);
     ws.on('error', args => {
 
@@ -61,7 +64,11 @@ let timeOut = setInterval(()=>{
 
         //如果是false，说明2秒没收到服务端响应了，该重连了
         console.log("断开重连");
-        createWebSocketClient();
+        try {
+            createWebSocketClient();
+        } catch (e) {
+            console.error(e);
+        }
     }
 },3000);
 
@@ -73,18 +80,30 @@ let ipInfo = {};
  * 更新ip
  */
 setInterval(async args => {
-    func.getIpInfo().then(value => {
-        ipInfo = value;
-    });
+    try {
+        func.getIpInfo().then(value => {
+            ipInfo = value;
+        });
+    } catch (e) {
+        console.error(e);
+    }
 }, 30 * 60 * 1000);
 
 /**
  * 1秒上传一次数据
  */
 setInterval(async args => {
-    let osData = await getOsData();
-    Object.assign(osData, {ipInfo});
-    ws.send(JSON.stringify(osData));
+    try {
+        if (lock) {
+            //lock=true时，说明还没有解锁，还在尝试连接，不应该发送数据
+            return;
+        }
+        let osData = await getOsData();
+        Object.assign(osData, {ipInfo});
+        ws.send(JSON.stringify(osData));
+    } catch (e) {
+        console.error(e);
+    }
 }, 1000);
 
 
