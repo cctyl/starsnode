@@ -23,6 +23,9 @@
         * {
 
         }
+        body{
+            background-color: #222e42;
+        }
 
         /*body,#app{*/
         /*  width: 100%;*/
@@ -31,7 +34,7 @@
         #app {
             text-align: center;
             padding: 20px;
-            background-color: #222e42;
+
             color: #ffffff;
         }
 
@@ -238,6 +241,66 @@
             background-color: #59a0ff;
         }
 
+        /*
+            顶部概览
+        */
+        .overview{
+
+            display: flex;
+            flex-direction: row;
+
+            justify-content: space-evenly;
+        }
+
+        .overview .card{
+
+            padding: 10px;
+
+
+        }
+
+        .overview .card-title{
+            padding: 5px 20px;
+        }
+
+        .overview .circle-box{
+            display: flex;
+
+            justify-content: space-around;
+
+        }
+
+        .overview .circle-box .circle-item{
+
+            display: flex;
+            flex-direction: column;
+            margin: 5px 20px;
+            align-items: center;
+
+        }
+        .overview .circle-box .circle-item span{
+            font-size: 18px;
+            margin: 10px 0;
+            color:#59a0ff;
+        }
+
+        .overview .el-progress__text {
+            color: #5ce1ad;
+        }
+        .overview .select-box .card-title{
+            margin-bottom: 20px;
+        }
+
+        .overview .host-num-box{
+            flex: 3;
+        }
+        .overview .host-data-box{
+            flex: 5;
+        }
+        .overview .select-box{
+            flex: 2;
+        }
+
     </style>
 
     <!-- 引入组件库 -->
@@ -247,6 +310,193 @@
 </head>
 <body>
 <div id="app">
+
+    <div class="overview">
+        <div class="host-num-box card">
+            <div class="card-title">设备在线情况: <span style="color: #5ce1ad">{{winNum + linuxNum}}</span> 在线</div>
+            <div class="circle-box">
+
+                <div class="circle-item">
+                    <span>win</span>
+                    <div role="progressbar"
+                         class="el-progress el-progress--circle">
+                        <div class="el-progress-circle" style="height: 126px; width: 126px;">
+
+                            <svg viewBox="0 0 100 100">
+                                <path d="
+                                        M 50 50
+                                        m 0 -47
+                                        a 47 47 0 1 1 0 94
+                                        a 47 47 0 1 1 0 -94
+                                        "
+                                      stroke="#e5e9f2"
+                                      stroke-width="4.8" fill="none"
+                                      class="el-progress-circle__track"
+                                      style="stroke-dasharray: 295.31px, 295.31px; stroke-dashoffset: 0px;"
+                                >
+
+                                </path>
+                                <path d="
+                                        M 50 50
+                                        m 0 -47
+                                        a 47 47 0 1 1 0 94
+                                        a 47 47 0 1 1 0 -94
+                                        "
+                                      stroke="#e5e9f2"
+                                      fill="none"
+                                      stroke-linecap="round"
+                                      stroke-width="4.8"
+                                      class="el-progress-circle__path"
+                                      style="stroke-dashoffset: 0px;
+                                   transition: stroke-dasharray 0.6s ease 0s, stroke 0.6s ease 0s;"
+                                >
+
+                                </path>
+                            </svg>
+
+                        </div>
+                        <div class="el-progress__text" style="font-size: 16px;">
+                            {{winNum}} 台
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="circle-item">
+                    <span>linux</span>
+                    <div role="progressbar"
+                         class="el-progress el-progress--circle">
+                        <div class="el-progress-circle" style="height: 126px; width: 126px;">
+
+                            <svg viewBox="0 0 100 100">
+                                <path d="
+                                        M 50 50
+                                        m 0 -47
+                                        a 47 47 0 1 1 0 94
+                                        a 47 47 0 1 1 0 -94
+                                        "
+                                      stroke="#e5e9f2"
+                                      stroke-width="4.8" fill="none"
+                                      class="el-progress-circle__track"
+                                      style="stroke-dasharray: 295.31px, 295.31px; stroke-dashoffset: 0px;"
+                                >
+
+                                </path>
+                                <path d="
+                                        M 50 50
+                                        m 0 -47
+                                        a 47 47 0 1 1 0 94
+                                        a 47 47 0 1 1 0 -94
+                                        "
+                                      stroke="#e5e9f2"
+                                      fill="none"
+                                      stroke-linecap="round"
+                                      stroke-width="4.8"
+                                      class="el-progress-circle__path"
+                                      style="stroke-dashoffset: 0px;
+                                   transition: stroke-dasharray 0.6s ease 0s, stroke 0.6s ease 0s;"
+                                >
+
+                                </path>
+                            </svg>
+
+                        </div>
+                        <div class="el-progress__text" style="font-size: 16px;">
+                            {{linuxNum}} 台
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="host-data-box card">
+            <div class="card-title">设备汇总核心信息</div>
+            <div class="circle-box">
+
+                <div class="circle-item">
+                    <span>核心数</span>
+                    <div role="progressbar"
+                         class="el-progress el-progress--circle">
+                        <div class="el-progress-circle" style="height: 126px; width: 126px;">
+
+                            <svg viewBox="0 0 100 100">
+                                <path d="
+                                        M 50 50
+                                        m 0 -47
+                                        a 47 47 0 1 1 0 94
+                                        a 47 47 0 1 1 0 -94
+                                        "
+                                      stroke="#e5e9f2"
+                                      stroke-width="4.8" fill="none"
+                                      class="el-progress-circle__track"
+                                      style="stroke-dasharray: 295.31px, 295.31px; stroke-dashoffset: 0px;"
+                                >
+
+                                </path>
+                                <path d="
+                                        M 50 50
+                                        m 0 -47
+                                        a 47 47 0 1 1 0 94
+                                        a 47 47 0 1 1 0 -94
+                                        "
+                                      stroke="#e5e9f2"
+                                      fill="none"
+                                      stroke-linecap="round"
+                                      stroke-width="4.8"
+                                      class="el-progress-circle__path"
+                                      style="stroke-dashoffset: 0px;
+                                   transition: stroke-dasharray 0.6s ease 0s, stroke 0.6s ease 0s;"
+                                >
+
+                                </path>
+                            </svg>
+
+                        </div>
+                        <div class="el-progress__text" style="font-size: 16px;">
+                            {{cpuCoreNum}} 个
+                        </div>
+                    </div>
+
+                </div>
+                <div class="circle-item">
+                    <span>核心使用率</span>
+
+                    <el-progress type="circle" :percentage="totalCpuUsage"
+                                 :color="getStatus(totalCpuUsage)"></el-progress>
+
+                </div>
+
+                <div class="circle-item">
+                    <span>总内存</span>
+                    <el-progress type="circle" :percentage="totalMemUsedGbPercent"
+                                 :color="getStatus(totalMemUsedGbPercent)"></el-progress>
+
+
+                    <span> {{totalMemUseGbNum}}GB / {{totalMemGbNum}}GB </span>
+                </div>
+
+            </div>
+        </div>
+        <div class=" card select-box">
+            <div class="card-title">筛选信息</div>
+            <el-select v-model="selectedIp" placeholder="请选择设备ip">
+                <el-option
+                        v-for="item in ipOptions"
+                        :key="item.addr"
+                        :label="item.addr + '-' + item.hostname"
+                        :value="item.addr">
+                </el-option>
+            </el-select>
+        </div>
+
+
+
+    </div>
+
     <div class="dev-item" v-for="(item, i) in devList">
 
         <!--
@@ -371,6 +621,7 @@
         el: '#app',
         data: function () {
             return {
+                //页面数据
                 devList: [
 
                     {
@@ -484,7 +735,8 @@
                         }
                     }
                 ],
-
+                //原始数据
+                devDataRawList:[],
                 dict: {
                     "country": "国家",
                     "countryCode": "国家编码",
@@ -505,7 +757,21 @@
                     "uptime": "运行时间"
                 },
                 showIpv6: false,
+                selectedIp:'',
+                //设备的ip信息
+                ipOptions:[
+                    '10.0.8.1',
+                    '10.0.8.2',
+                ],
 
+                winNum:0,
+                linuxNum:0,
+                cpuCoreNum:0,
+                totalCpuUsage:0,
+                totalMemGbNum:0,
+                totalMemUseGbNum:0,
+                totalMemFreeGbNum:0,
+                totalMemUsedGbPercent:0,
             }
         },
         mounted() {
@@ -588,6 +854,14 @@
                 return '#45a0ff';
             },
 
+            initData(){
+                this.ipOptions = [];
+                this.winNum = 0;
+                this.linuxNum = 0;
+                this.cpuCoreNum = 0;
+                this.totalMemGbNum = 0;
+            },
+
             wsOpen(ev) {
                 console.log("连接打开")
             },
@@ -599,8 +873,17 @@
                 console.log("连接异常，原因：" + JSON.stringify(ev))
             },
             wsMessage(ev) {
-                let data = JSON.parse(ev.data);
-                console.log(data);
+
+                this.devDataRawList  = JSON.parse(ev.data);
+                let data =  this.devDataRawList;
+                console.log(this.devDataRawList);
+
+                this.initData();
+
+                let memSize = 0;
+                let usedMemSize = 0;
+                let freeMemSize = 0;
+                let totalCpuUsage = 0;
                 for (let i = 0; i < data.length; i++) {
                     data[i].osInfo.openedCount = data[i].openedCount;
 
@@ -612,29 +895,76 @@
                     delete data[i].osInfo.ip;
 
 
-                    if (this.showIpv6 !== true) {
-                        let keyArr = Object.keys(data[i].netInterface);
-                        let obj = data[i].netInterface;
-                        for (let j = 0; j < keyArr.length; j++) {
+                    this.cpuCoreNum+=data[i].cpuInfo.cpuCount;
+                    memSize+=data[i].memInfo.totalMemMb;
+                    usedMemSize+=data[i].memInfo.usedMemMb;
+                    freeMemSize+=data[i].memInfo.freeMemMb;
+                    totalCpuUsage+= data[i].cpuInfo.cpuUsage;
 
-                            let key = keyArr[j];
+                    if (data[i].osInfo.platform==='linux'){
+                        this.linuxNum++;
+                    }else {
+                        this.winNum++;
+                    }
+                    let keyArr = Object.keys(data[i].netInterface);
+                    let obj = data[i].netInterface;
+                    for (let j = 0; j < keyArr.length; j++) {
 
-                            let netinterfaceArr = obj[key];
+                        let key = keyArr[j];
 
+                        let netinterfaceArr = obj[key];
+
+
+                        for (let k = 0; k < netinterfaceArr.length; k++) {
+
+                            if (! data[i].isSelected){
+                                data[i].isSelected =  netinterfaceArr[k].address === this.selectedIp
+                            }
+
+                            if (netinterfaceArr[k].address.indexOf("10.0.8.")!==-1){
+                                this.ipOptions.push({
+                                    addr:netinterfaceArr[k].address,
+                                    hostname:data[i].osInfo.hostname
+                                })
+                            }
+
+                        }
+                        if (this.showIpv6 !== true) {
                             obj[key] = netinterfaceArr.filter(function (item) {
                                 return item.family === 'IPv4'
                             });
-
 
                             if (obj[key].length === 0) {
                                 delete obj[key];
                             }
                         }
-
-
                     }
                 }
-                this.devList = data;
+
+
+                if (this.selectedIp) {
+                    //开始过滤
+                    this.devList = data.filter((element) => {
+                        return element.isSelected;
+                    });
+                } else {
+                    this.devList = data;
+                }
+
+                //ip进行排序
+                this.ipOptions.sort((a,b) => {
+                   return  a.addr.replace("10.0.8.","")*1 - b.addr.replace("10.0.8.","")*1
+                });
+
+
+
+
+                this.totalMemGbNum = (memSize / 1024).toFixed(1);
+                this.totalMemUseGbNum = (usedMemSize / 1024).toFixed(1);
+                this.totalMemFreeGbNum = (freeMemSize / 1024).toFixed(1);
+                this.totalCpuUsage = (totalCpuUsage/this.devDataRawList.length).toFixed(2);
+                this.totalMemUsedGbPercent = ( this.totalMemUseGbNum / this.totalMemGbNum *100).toFixed(2);
+
             },
 
             copy(str){
