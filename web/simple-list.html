@@ -23,7 +23,8 @@
         * {
 
         }
-        body{
+
+        body {
             background-color: #222e42;
         }
 
@@ -114,7 +115,7 @@
         }
 
 
-        .dev-circle-chart .speed{
+        .dev-circle-chart .speed {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -122,12 +123,15 @@
             width: 90px;
             margin: 30px;
         }
-        .dev-circle-chart .up{
+
+        .dev-circle-chart .up {
             color: magenta;
         }
-        .dev-circle-chart .down{
+
+        .dev-circle-chart .down {
             color: yellow;
         }
+
         .dev-circle-chart .circle-item .el-progress__text {
 
             color: #fff;
@@ -244,7 +248,7 @@
         /*
             顶部概览
         */
-        .overview{
+        .overview {
 
             display: flex;
             flex-direction: row;
@@ -252,25 +256,25 @@
             justify-content: space-evenly;
         }
 
-        .overview .card{
+        .overview .card {
 
             padding: 10px;
 
 
         }
 
-        .overview .card-title{
+        .overview .card-title {
             padding: 5px 20px;
         }
 
-        .overview .circle-box{
+        .overview .circle-box {
             display: flex;
 
             justify-content: space-around;
 
         }
 
-        .overview .circle-box .circle-item{
+        .overview .circle-box .circle-item {
 
             display: flex;
             flex-direction: column;
@@ -278,26 +282,30 @@
             align-items: center;
 
         }
-        .overview .circle-box .circle-item span{
+
+        .overview .circle-box .circle-item span {
             font-size: 18px;
             margin: 10px 0;
-            color:#59a0ff;
+            color: #59a0ff;
         }
 
         .overview .el-progress__text {
             color: #5ce1ad;
         }
-        .overview .select-box .card-title{
+
+        .overview .select-box .card-title {
             margin-bottom: 20px;
         }
 
-        .overview .host-num-box{
+        .overview .host-num-box {
             flex: 3;
         }
-        .overview .host-data-box{
+
+        .overview .host-data-box {
             flex: 5;
         }
-        .overview .select-box{
+
+        .overview .select-box {
             flex: 2;
         }
 
@@ -409,7 +417,6 @@
                 </div>
 
 
-
             </div>
         </div>
 
@@ -494,10 +501,9 @@
         </div>
 
 
-
     </div>
 
-    <div class="dev-item" v-for="(item, i) in devList">
+    <div class="dev-item" v-for="(item, i) in devList"  :key="item.index">
 
         <!--
           左右两部分
@@ -556,8 +562,8 @@
 
 
                     </div>
-                    <div class="speed up"  v-if="item.netstatInfo.total">
-                         <span>↑ {{ formatNetSpeed(item.netstatInfo.total.outputMb) }}</span>
+                    <div class="speed up" v-if="item.netstatInfo.total">
+                        <span>↑ {{ formatNetSpeed(item.netstatInfo.total.outputMb) }}</span>
                     </div>
                 </div>
             </div>
@@ -607,7 +613,7 @@
     </div>
 
     <div class="float-btn">
-        <span class="show-txt" @click="showIpv6=!showIpv6">{{showIpv6?'IPv4+IPv6':'IPv4'}}</span>
+        <span class="show-txt" @click="showIpv6=!showIpv6">{{showIpv6 ? 'IPv4+IPv6' : 'IPv4'}}</span>
     </div>
 
 </div>
@@ -735,8 +741,6 @@
                         }
                     }
                 ],
-                //原始数据
-                devDataRawList:[],
                 dict: {
                     "country": "国家",
                     "countryCode": "国家编码",
@@ -751,27 +755,26 @@
                     "type": "操作系统",
                     "platform": "平台",
                     "release": "版本",
-
                     "hostname": "主机名",
                     "arch": "cpu架构",
                     "uptime": "运行时间"
                 },
                 showIpv6: false,
-                selectedIp:'',
+                selectedIp: '',
                 //设备的ip信息
-                ipOptions:[
+                ipOptions: [
                     '10.0.8.1',
                     '10.0.8.2',
                 ],
 
-                winNum:0,
-                linuxNum:0,
-                cpuCoreNum:0,
-                totalCpuUsage:0,
-                totalMemGbNum:0,
-                totalMemUseGbNum:0,
-                totalMemFreeGbNum:0,
-                totalMemUsedGbPercent:0,
+                winNum: 0,
+                linuxNum: 0,
+                cpuCoreNum: 0,
+                totalCpuUsage: 0,
+                totalMemGbNum: 0,
+                totalMemUseGbNum: 0,
+                totalMemFreeGbNum: 0,
+                totalMemUsedGbPercent: 0,
             }
         },
         mounted() {
@@ -814,25 +817,6 @@
                 return `${(netSpeedMB * 1024).toFixed(1)} KB/s`
             },
 
-            formatTimestamp: (timestamp, format = 'time') => {
-                if (typeof (timestamp) !== 'number') return '--'
-                let date = new Date(timestamp)
-                let padZero = (num) => String(num).padStart(2, '0')
-                let year = date.getFullYear()
-                let mounth = padZero(date.getMonth() + 1)
-                let day = padZero(date.getDate())
-                let hours = padZero(date.getHours())
-                let minute = padZero(date.getMinutes())
-                let second = padZero(date.getSeconds())
-                switch (format) {
-                    case 'date':
-                        return `${year}-${mounth}-${day}`
-                    case 'time':
-                        return `${year}-${mounth}-${day} ${hours}:${minute}:${second}`
-                    default:
-                        return `${year}-${mounth}-${day} ${hours}:${minute}:${second}`
-                }
-            },
 
             formatMen(memSize) {
                 if (memSize > 1024) {
@@ -845,7 +829,7 @@
 
             getStatus(progress) {
 
-                if (progress > 70 && progress<90) {
+                if (progress > 70 && progress < 90) {
                     return '#dfa238';
                 } else if (progress > 90) {
                     return '#f34c4a';
@@ -854,7 +838,7 @@
                 return '#45a0ff';
             },
 
-            initData(){
+            initData() {
                 this.ipOptions = [];
                 this.winNum = 0;
                 this.linuxNum = 0;
@@ -874,10 +858,8 @@
             },
             wsMessage(ev) {
 
-                this.devDataRawList  = JSON.parse(ev.data);
-                let data =  this.devDataRawList;
-                console.log(this.devDataRawList);
-
+                let data = JSON.parse(ev.data);
+                let totalSize = data.length;
                 this.initData();
 
                 let memSize = 0;
@@ -886,7 +868,7 @@
                 let totalCpuUsage = 0;
                 for (let i = 0; i < data.length; i++) {
                     data[i].osInfo.openedCount = data[i].openedCount;
-
+                    data[i].index = i;
                     // delete data[i].ipInfo.status;
                     // delete data[i].ipInfo.region;
                     // delete data[i].ipInfo.zip;
@@ -895,36 +877,36 @@
                     // delete data[i].osInfo.ip;
 
 
-                    this.cpuCoreNum+=data[i].cpuInfo.cpuCount;
-                    memSize+=data[i].memInfo.totalMemMb;
-                    usedMemSize+=data[i].memInfo.usedMemMb;
-                    freeMemSize+=data[i].memInfo.freeMemMb;
-                    totalCpuUsage+= data[i].cpuInfo.cpuUsage;
+                    this.cpuCoreNum += data[i].cpuInfo.cpuCount;
+                    memSize += data[i].memInfo.totalMemMb;
+                    usedMemSize += data[i].memInfo.usedMemMb;
+                    freeMemSize += data[i].memInfo.freeMemMb;
+                    totalCpuUsage += data[i].cpuInfo.cpuUsage;
 
-                    if (data[i].osInfo.platform==='linux'){
+                    if (data[i].osInfo.platform === 'linux') {
                         this.linuxNum++;
-                    }else {
+                    } else {
                         this.winNum++;
                     }
                     let keyArr = Object.keys(data[i].netInterface);
                     let obj = data[i].netInterface;
+
+                    //打上标记，用于后续筛选
                     for (let j = 0; j < keyArr.length; j++) {
 
                         let key = keyArr[j];
 
                         let netinterfaceArr = obj[key];
-
-
                         for (let k = 0; k < netinterfaceArr.length; k++) {
 
-                            if (! data[i].isSelected){
-                                data[i].isSelected =  netinterfaceArr[k].address === this.selectedIp
+                            if (!data[i].isSelected) {
+                                data[i].isSelected = netinterfaceArr[k].address === this.selectedIp
                             }
 
-                            if (netinterfaceArr[k].address.indexOf("10.0.8.")!==-1){
+                            if (netinterfaceArr[k].address.indexOf("10.0.8.") !== -1) {
                                 this.ipOptions.push({
-                                    addr:netinterfaceArr[k].address,
-                                    hostname:data[i].osInfo.hostname
+                                    addr: netinterfaceArr[k].address,
+                                    hostname: data[i].osInfo.hostname
                                 })
                             }
 
@@ -952,31 +934,29 @@
                 }
 
                 //ip进行排序
-                this.ipOptions.sort((a,b) => {
-                   return  a.addr.replace("10.0.8.","")*1 - b.addr.replace("10.0.8.","")*1
+                this.ipOptions.sort((a, b) => {
+                    return a.addr.replace("10.0.8.", "") * 1 - b.addr.replace("10.0.8.", "") * 1
                 });
-
-
 
 
                 this.totalMemGbNum = (memSize / 1024).toFixed(1);
                 this.totalMemUseGbNum = (usedMemSize / 1024).toFixed(1);
                 this.totalMemFreeGbNum = (freeMemSize / 1024).toFixed(1);
-                this.totalCpuUsage = (totalCpuUsage/this.devDataRawList.length).toFixed(2);
-                this.totalMemUsedGbPercent = ( this.totalMemUseGbNum / this.totalMemGbNum *100).toFixed(2);
+                this.totalCpuUsage = (totalCpuUsage / totalSize).toFixed(2);
+                this.totalMemUsedGbPercent = (this.totalMemUseGbNum / this.totalMemGbNum * 100).toFixed(2);
 
             },
 
-            copy(str){
+            copy(str) {
                 let copyInput = document.createElement('input');//创建input元素
                 document.body.appendChild(copyInput);//向页面底部追加输入框
                 copyInput.setAttribute('value', str);//添加属性，将url赋值给input元素的value属性
                 copyInput.select();//选择input元素
                 document.execCommand("Copy");//执行复制命令
                 this.$message({
-                    message: "已复制"+str,
+                    message: "已复制" + str,
                     type: 'success',
-                    duration:600
+                    duration: 600
                 });
                 copyInput.remove();//删除动态创建的节点
             }
