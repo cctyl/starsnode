@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication a(argc,argv);
 
-    DevInfo dev;
+
     std::shared_ptr<Info> info = std::make_shared<Info>();
 
 
@@ -30,15 +30,25 @@ int main(int argc, char *argv[])
 
 
     //cpuInfo 的封装
-    dev.cpuInfo.cpuUsage =   QString::number(info->measure_cpu_usage(), 'f', 2).toDouble();
-    dev.cpuInfo.cpuModel = info->cpuType();
-    dev.cpuInfo.cpuCount = info->getCpuCount();
-    qDebug().noquote()<<qtjson::serialize(dev.cpuInfo);
+    info->cpuInfo();
+    qDebug().noquote()<<qtjson::serialize(info->d.cpuInfo);
 
 
+    //memInfo
 
+    info->memInfo();
+    qDebug().noquote()<<qtjson::serialize(info->d.memInfo);
 
     qDebug()<<"启动";
+
+
+
+
+
+
+
+
+
     //int r = a.exec();
     //return r;
 

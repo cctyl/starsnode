@@ -16,6 +16,7 @@
 #include <QHostInfo>
 #include <Windows.h>
 #include<QObject>
+#include "devinfo.h"
 
 class Info : public QObject
 {
@@ -23,6 +24,13 @@ class Info : public QObject
     Q_OBJECT
 public:
     Info();
+
+    DevInfo d;
+
+
+    void memInfo();
+
+    void cpuInfo();
 
     /*
      * 获取计算机名称
@@ -42,9 +50,9 @@ public:
     const QString disk();
 
     unsigned short getCpuCount();
-    void ramInfo();
 
-    double measure_cpu_usage();
+
+    double measureCpuUsage();
 };
 
 #endif // INFO_H

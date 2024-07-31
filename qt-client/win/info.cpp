@@ -1,6 +1,10 @@
 #include "info.h"
 #include<iostream>
 #define GB (1024.0 * 1024.0 * 1024.0)
+#define MB (1024.0 * 1024.0 )
+
+
+
 struct system_time_t
 {
     uint64_t idle_time, kernel_time, user_time;
@@ -24,6 +28,15 @@ struct system_time_file_t
         return time;
     }
 };
+/**
+ * 保留两位小数
+ * @brief formatDouble
+ * @param source
+ * @return
+ */
+double formatDouble(double source){
+    return QString::number(source, 'f', 2).toDouble();
+}
 
 unsigned short Info::getCpuCount(){
 
@@ -32,13 +45,12 @@ unsigned short Info::getCpuCount(){
     return static_cast<unsigned short>(sysInfo.dwNumberOfProcessors);
 
 }
-double Info::measure_cpu_usage()
+double Info::measureCpuUsage()
 {
     static system_time_file_t begin_time{}, end_time{};
     GetSystemTimes(&end_time.idle_time, &end_time.kernel_time, &end_time.user_time);
     auto system_time = end_time.to_uint64_t() - begin_time.to_uint64_t();
     double cpu_usage_percent = 1.0 * (system_time.kernel_time + system_time.user_time - system_time.idle_time) / (system_time.kernel_time + system_time.user_time) * 100;
-    std::cout << "cpu usage percent: " << cpu_usage_percent << "%" << std::endl;
 
     //更新下上次使用率
     GetSystemTimes(&begin_time.idle_time, &begin_time.kernel_time, &begin_time.user_time);
@@ -64,26 +76,25 @@ Info::Info() {
 }
 
 
+void Info::cpuInfo(){
+
+    d.cpuInfo.cpuUsage =   QString::number(measureCpuUsage(), 'f', 2).toDouble();
+    d.cpuInfo.cpuModel = cpuType();
+    d.cpuInfo.cpuCount = getCpuCount();
+}
 
 
-
- void Info::ramInfo()
+void Info::memInfo()
 {
     MEMORYSTATUSEX statex;
     statex.dwLength = sizeof (statex);
     GlobalMemoryStatusEx(&statex);
-    double m_totalMem = statex.ullTotalPhys  * 1.0 / GB;
-    //qDebug() << "Total memory: " << m_totalMem;
 
-    double m_freeMem = statex.ullAvailPhys * 1.0 / GB;
-    //qDebug() << "Avail memory: " << m_freeMem;
-
-    double percen = (m_totalMem - m_freeMem) / m_totalMem * 100;
-
-    QString m_memDescribe = QString("Avail %1 GB / Total %2 GB  %3%").
-                            arg(QString::asprintf("%.2f", m_freeMem)).arg(QString::asprintf("%.2f", m_totalMem)).arg(QString::asprintf("%.2f", percen));
-
-    qDebug()<< m_memDescribe;
+    d.memInfo.totalMemMb =formatDouble( statex.ullTotalPhys  * 1.0 / MB);
+    d.memInfo.freeMemMb = formatDouble(statex.ullAvailPhys * 1.0 / MB);
+    d.memInfo.usedMemMb =    d.memInfo.totalMemMb -  d.memInfo.freeMemMb;
+    d.memInfo.usedMemPercentage =  formatDouble(d.memInfo.usedMemMb/ d.memInfo.totalMemMb *100);
+    d.memInfo.freeMemPercentage =  formatDouble(d.memInfo.freeMemMb/ d.memInfo.totalMemMb *100);
 }
 
 /*
