@@ -37,7 +37,7 @@ public:
     double   freeGb ;
     double usedPercentage;
     double freePercentage;
-    REFLECT(totalGb,usedGb,usedPercentage,freePercentage)
+    REFLECT(totalGb,usedGb,freeGb,usedPercentage,freePercentage)
 };
 
 /**

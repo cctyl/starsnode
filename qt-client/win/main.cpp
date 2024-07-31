@@ -29,28 +29,24 @@ int main(int argc, char *argv[])
 
 
 
-    //cpuInfo 的封装
-    info->cpuInfo();
-    qDebug().noquote()<<qtjson::serialize(info->d.cpuInfo);
+    // //cpuInfo 的封装
+    // info->cpuInfo();
+    // qDebug().noquote()<<qtjson::serialize(info->d.cpuInfo);
 
 
-    //memInfo
+    // //memInfo
+    // info->memInfo();
+    // qDebug().noquote()<<qtjson::serialize(info->d.memInfo);
 
-    info->memInfo();
-    qDebug().noquote()<<qtjson::serialize(info->d.memInfo);
+
+    // driverInfo
+    info->driveInfo();
+    qDebug().noquote()<<qtjson::serialize(info->d.driveInfo);
 
     qDebug()<<"启动";
 
-
-
-
-
-
-
-
-
-    //int r = a.exec();
-    //return r;
+    // int r = a.exec();
+    // return r;
 
     return 0;
 }

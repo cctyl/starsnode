@@ -84,6 +84,35 @@ void Info::cpuInfo(){
 }
 
 
+void Info::driveInfo(){
+    QFileInfoList list = QDir::drives();
+    double total = 0.0;
+    double free = 0.0;
+    foreach (QFileInfo dir, list)
+    {
+        QString dirName = dir.absolutePath();
+        dirName.remove("/");
+        qDebug()<<dirName;
+        LPCWSTR lpcwstrDriver = (LPCWSTR)dirName.utf16();
+        ULARGE_INTEGER liFreeBytesAvailable, liTotalBytes, liTotalFreeBytes;
+
+        if(GetDiskFreeSpaceEx(lpcwstrDriver, &liFreeBytesAvailable, &liTotalBytes, &liTotalFreeBytes) )
+        {
+            free+= QString::number((double) liTotalFreeBytes.QuadPart / GB, 'f', 1).toDouble();
+            total+= QString::number((double) liTotalBytes.QuadPart /  GB, 'f', 1).toDouble();
+        }
+    }
+
+    d.driveInfo.usedGb =  formatDouble(total - free);
+    d.driveInfo.totalGb = formatDouble(total);
+    d.driveInfo.freeGb = formatDouble(free);
+
+    d.driveInfo.usedPercentage = formatDouble(d.driveInfo.usedGb/ d.driveInfo.totalGb *100 );
+    d.driveInfo.freePercentage = formatDouble( d.driveInfo.freeGb / d.driveInfo.totalGb *100);
+
+}
+
+
 void Info::memInfo()
 {
     MEMORYSTATUSEX statex;
@@ -237,32 +266,3 @@ const QString Info::osVersion()
 
 
 
-const QString Info::disk()
-{
-    QString m_diskDescribe = "";
-    QFileInfoList list = QDir::drives();
-    foreach (QFileInfo dir, list)
-    {
-        QString dirName = dir.absolutePath();
-        dirName.remove("/");
-        LPCWSTR lpcwstrDriver = (LPCWSTR)dirName.utf16();
-        ULARGE_INTEGER liFreeBytesAvailable, liTotalBytes, liTotalFreeBytes;
-
-        if(GetDiskFreeSpaceEx(lpcwstrDriver, &liFreeBytesAvailable, &liTotalBytes, &liTotalFreeBytes) )
-        {
-            QString free = QString::number((double) liTotalFreeBytes.QuadPart / 1024/1024/1024, 'f', 1);
-            free += "G";
-            QString all = QString::number((double) liTotalBytes.QuadPart /  1024/1024/1024, 'f', 1);
-            all += "G";
-
-            QString str = QString("%1 %2/%3       ").arg(dirName, free, all);
-            m_diskDescribe += str;
-
-            double freeMem = (double) liTotalFreeBytes.QuadPart /  1024/1024/1024;
-
-
-        }
-    }
-
-    return m_diskDescribe;
-}

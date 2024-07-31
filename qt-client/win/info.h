@@ -32,6 +32,8 @@ public:
 
     void cpuInfo();
 
+    void driveInfo();
+
     /*
      * 获取计算机名称
      */
@@ -47,7 +49,7 @@ public:
 
     const QString osVersion();
 
-    const QString disk();
+
 
     unsigned short getCpuCount();
 
