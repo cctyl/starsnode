@@ -29,6 +29,11 @@ struct system_time_file_t
         return time;
     }
 };
+
+
+
+
+
 /**
  * 保留两位小数
  * @brief formatDouble
@@ -184,6 +189,28 @@ void Info::memInfo()
     d.memInfo.freeMemPercentage =  formatDouble(d.memInfo.freeMemMb/ d.memInfo.totalMemMb *100);
 }
 
+
+double getStartTime(){
+    DWORD iRunTime = GetTickCount();
+    const int Num1 = 1000;
+    time_t nowTime;
+    time(&nowTime);
+    time_t systemUpTime = nowTime - (iRunTime / Num1);
+    return (nowTime - systemUpTime)/60.0/60;
+
+}
+void Info::osInfo(){
+
+    d.osInfo.type = "Windows";
+    d.osInfo.platform ="win";
+    d.osInfo.release = osVersion();
+
+    d.osInfo.hostname = localmachineName();
+
+    d.osInfo.arch =  QSysInfo::currentCpuArchitecture();
+    d.osInfo.uptime = formatDouble(getStartTime());
+}
+
 /*
  *
  * 计算机名
@@ -197,17 +224,21 @@ const QString Info::localmachineName()
 /*
  * 本机局域网ip
  */
-const  QList<QString> Info::ip()
+ void Info::netInterface()
 {
-    QString ip="";
 
-    QList<QString> ipList;
+
+
+
     QList<QNetworkInterface> interFaceList = QNetworkInterface::allInterfaces();
     for(int i=0; i< interFaceList.size(); i++)
     {
         QNetworkInterface f = interFaceList.at(i);
         if(f.flags().testFlag(QNetworkInterface::IsRunning))
         {
+            std::vector<NetInterfaceInfo> v;
+
+
 
             qDebug()<< "===========QNetworkInterface============";
             qDebug()<< f.hardwareAddress();
@@ -224,31 +255,45 @@ const  QList<QString> Info::ip()
                 {
                     qDebug()<< "===========QNetworkInterface  QNetworkAddressEntry============";
 
-                    qDebug()<< entry.ip();
+                    qDebug()<< entry.ip().toString();
                     qDebug()<< entry.ip().protocol();
                     qDebug()<< entry.netmask().toString();
                     qDebug()<< entry.broadcast().toString();
 
+
+                    QString family;
                     if(QAbstractSocket::IPv4Protocol == entry.ip().protocol()){
-                        qDebug()<<"ipv4";
+                        family = "IPv4";
+
 
 
                     }else{
-                        qDebug()<<"ipv6";
+                        family = "IPv6";
+
 
                     }
 
-                    ip = entry.ip().toString();
+                    v.push_back({
+                        entry.ip().toString(),
+                        entry.netmask().toString(),
+                        family,
+                        f.hardwareAddress(),
+                        entry.broadcast().toString(),
+                        true,
 
 
+                    });
 
-                    ipList.push_back(ip);
+
                 }
             }
+
+
+            d.netInterface[f.humanReadableName()] = v;
         }
     }
 
-    return ipList;
+
 }
 
 

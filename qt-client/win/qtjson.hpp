@@ -334,12 +334,12 @@ struct special_traits<std::vector<T, Alloc>> {
         QJsonArray root;
         for (auto const &elem: object) {
 
-            qDebug()<< elem;
-            qDebug()<<  qtjson::objToJson(elem);
+           // qDebug()<< elem;
+            //qDebug()<<  qtjson::objToJson(elem);
             root.append(qtjson::objToJson(elem));
         }
 
-        qDebug()<<root;
+        //qDebug()<<root;
         return root;
     }
 

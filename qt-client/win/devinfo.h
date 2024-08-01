@@ -63,8 +63,12 @@ public:
     QString netmask;
     QString family;
     QString mac;
+    QString boardcast;
     bool internal;
-    REFLECT(address,netmask,family,mac,internal)
+    REFLECT(address,netmask,family,mac,internal,boardcast)
+
+
+
 };
 
 /**
@@ -79,10 +83,10 @@ public:
     QString release;//系统版本
     QString hostname;//机器名
     QString arch;//cpu架构
-    QString   uptime;//开机时间
+    double   uptime;//开机时间
 
 
-REFLECT(release,hostname,arch,uptime)
+REFLECT(type,platform,release,hostname,arch,uptime)
 };
 
 
@@ -95,7 +99,7 @@ public:
     MemInfo memInfo;
     DriverInfo driveInfo;
     std::map<QString,NetstatInfo> netstatInfo;
-    std::map<QString,QJsonArray> netInterface;
+    std::map<QString,std::vector<NetInterfaceInfo>> netInterface;
     OsInfo osInfo;
     short openedCount = 0;
     QJsonObject ipInfo;

@@ -5,6 +5,12 @@
 #include"qtjson.hpp"
 #include"devinfo.h"
 
+QDebug operator<<(QDebug debug, const NetInterfaceInfo &p){
+
+    debug.nospace() << "NetInterfaceInfo";
+    return debug;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -25,7 +31,7 @@ int main(int argc, char *argv[])
     // qDebug().noquote()<< info->mac();
     // qDebug().noquote()<< info->cpuType();
     // qDebug().noquote()<<  info->osVersion();
-    // qDebug().noquote()<<  info->disk();
+
 
 
 
@@ -44,9 +50,16 @@ int main(int argc, char *argv[])
     // qDebug().noquote()<<qtjson::serialize(info->d.driveInfo);
 
     //netstatInfo
+    //info->netstatInfo();
+    //qDebug().noquote()<<qtjson::serialize(info->d.netstatInfo);
 
-    info->netstatInfo();
-    qDebug().noquote()<<qtjson::serialize(info->d.netstatInfo);
+    //netInterface
+    // info->netInterface();
+    // qDebug().noquote()<<qtjson::serialize(info->d.netInterface);
+
+    //osInfo
+    info-> osInfo();
+    qDebug().noquote()<<qtjson::serialize(info->d.osInfo);
     qDebug()<<"启动";
 
     // int r = a.exec();

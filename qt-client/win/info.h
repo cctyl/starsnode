@@ -36,13 +36,17 @@ public:
 
     void netstatInfo();
 
+    void netInterface();
+
+
+    void osInfo();
 
     /*
      * 获取计算机名称
      */
     const QString localmachineName();
 
-    const QList<QString> ip();
+
 
     const QString mac();
 
