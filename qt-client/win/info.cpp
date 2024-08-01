@@ -1,10 +1,11 @@
 #include "info.h"
-#include<iostream>
 #define GB (1024.0 * 1024.0 * 1024.0)
 #define MB (1024.0 * 1024.0 )
-
-
-
+#include "iphlpapi.h"
+#include"QThread"
+#pragma comment(lib, "IPHLPAPI.lib")
+#pragma comment(lib,"pdh")
+#pragma execution_character_set("utf-8")
 struct system_time_t
 {
     uint64_t idle_time, kernel_time, user_time;
@@ -76,6 +77,63 @@ Info::Info() {
 }
 
 
+
+void Info::netstatInfo(){
+
+    PMIB_IFTABLE pTable = nullptr;
+    DWORD dword = 0;
+    ULONG retCode = GetIfTable(pTable, &dword, true);
+    if(retCode == ERROR_NOT_SUPPORTED)
+        return;
+    if(retCode == ERROR_INSUFFICIENT_BUFFER)
+        pTable = (PMIB_IFTABLE)new BYTE[65535];
+    //上传速度
+    DWORD dwIn = 0;
+    //下载速度
+    DWORD dwOut = 0;
+    //上传最后字节
+    DWORD dwLastIn = 0;
+    //下载最后字节
+    DWORD dwLastOut = 0;
+
+    GetIfTable(pTable, &dword, true);
+    DWORD dwInOc = 0;
+    DWORD dwOutOc = 0;
+    for(UINT i = 0; i < pTable->dwNumEntries; i++)
+    {
+        MIB_IFROW row = pTable->table[i];
+        dwInOc += row.dwInOctets;
+        dwOutOc += row.dwOutOctets;
+    }
+    dwIn = dwInOc - dwLastIn;
+    dwOut = dwOutOc - dwLastOut;
+
+    if(dwLastIn <= 0)
+        dwIn = 0;
+    else
+        dwIn = dwIn / 1024;
+
+    if(dwLastOut <= 0)
+        dwOut = 0;
+    else
+        dwOut = dwOut / 1024;
+
+    dwLastIn = dwInOc;
+    dwLastOut = dwOutOc;
+
+    double in = static_cast<double>(dwIn) /1024/8;
+    double out = static_cast<double>(dwOut) / 1024/8;
+    qDebug()<<"in="<<in<<",out="<<out;
+
+
+    d.netstatInfo["total"] = {
+        formatDouble(out),formatDouble(in)
+    };
+
+    delete [] pTable;
+
+
+}
 void Info::cpuInfo(){
 
     d.cpuInfo.cpuUsage =   QString::number(measureCpuUsage(), 'f', 2).toDouble();

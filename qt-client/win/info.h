@@ -34,6 +34,9 @@ public:
 
     void driveInfo();
 
+    void netstatInfo();
+
+
     /*
      * 获取计算机名称
      */
@@ -55,6 +58,10 @@ public:
 
 
     double measureCpuUsage();
+
+
+private:
+
 };
 
 #endif // INFO_H

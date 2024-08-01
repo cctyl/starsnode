@@ -40,9 +40,13 @@ int main(int argc, char *argv[])
 
 
     // driverInfo
-    info->driveInfo();
-    qDebug().noquote()<<qtjson::serialize(info->d.driveInfo);
+    // info->driveInfo();
+    // qDebug().noquote()<<qtjson::serialize(info->d.driveInfo);
 
+    //netstatInfo
+
+    info->netstatInfo();
+    qDebug().noquote()<<qtjson::serialize(info->d.netstatInfo);
     qDebug()<<"启动";
 
     // int r = a.exec();
