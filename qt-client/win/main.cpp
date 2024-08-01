@@ -4,13 +4,13 @@
 #include<QString>
 #include"qtjson.hpp"
 #include"devinfo.h"
+#include<QThread>
 
 QDebug operator<<(QDebug debug, const NetInterfaceInfo &p){
 
     debug.nospace() << "NetInterfaceInfo";
     return debug;
 }
-
 
 
 int main(int argc, char *argv[])
@@ -21,10 +21,6 @@ int main(int argc, char *argv[])
 
 
     std::shared_ptr<Info> info = std::make_shared<Info>();
-
-
-
-
 
     int r = a.exec();
     return r;

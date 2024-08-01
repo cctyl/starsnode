@@ -64,9 +64,67 @@ double Info::measureCpuUsage()
 
     return cpu_usage_percent;
 }
+/**
+ * 接收到服务端返回值
+ *
+ * @brief Info::onTextMessageReceived
+ * @param message
+ */
+void Info::onTextMessageReceived(const QString &message){
 
+    qDebug()<<"接收到服务端消息:"<<message;
+
+}
+
+
+void Info::onConnected(){
+    qDebug()<<"连接成功";
+}
+void Info::onDisconnected(){
+    qDebug()<<"断开连接";
+    QThread::msleep(1000);
+    qDebug()<<"重试...";
+    clientSocket->close();
+    clientSocket->open(url);
+}
+Info::~Info(){
+
+    // 先关闭旧连接
+    if (clientSocket) {
+        clientSocket->close();
+        delete clientSocket;
+        clientSocket = nullptr;
+    }
+
+}
 Info::Info() {
 
+
+    clientSocket = new QWebSocket();
+
+    qDebug()<<"打开链接";
+    clientSocket->open(url);
+
+    QObject::connect(clientSocket,
+                     &QWebSocket::connected,
+                     this,
+                     &Info::onConnected
+                     );
+
+    QObject::connect(clientSocket,
+                     &QWebSocket::disconnected,
+                     this,
+                     &Info::onDisconnected
+                     );
+
+    QObject::connect(clientSocket, &QWebSocket::textMessageReceived,this,&Info::onTextMessageReceived);
+
+    //等待连接成功后，才开始发送信息
+    QEventLoop loop;
+    QObject::connect(clientSocket,  &QWebSocket::connected, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    qDebug()<<"启动定时任务";
 
     //启动时更新一次ip信息
     ipInfo();
@@ -97,21 +155,14 @@ Info::Info() {
             //qDebug().noquote()<<qtjson::serialize(info->d.netstatInfo);
 
             //netInterface
-           netInterface();
-            // qDebug().noquote()<<qtjson::serialize(info->d.netInterface);
+            netInterface();
+                // qDebug().noquote()<<qtjson::serialize(info->d.netInterface);
 
             //osInfo
-             osInfo();
+            osInfo();
             //qDebug().noquote()<<qtjson::serialize(info->d.osInfo);
 
-
-
-            //ipInfo
-            //info->ipInfo();
-
-
-
-            qDebug().noquote()<<qtjson::serialize(d);
+            clientSocket->sendTextMessage(qtjson::serialize(d));
 
         }
         );
@@ -134,7 +185,7 @@ Info::Info() {
         }
         );
 
-     slowTimer->start(3600000);//间隔的秒数 3600秒
+    slowTimer->start(3600000);//间隔的秒数 3600秒
 }
 
 
@@ -153,9 +204,9 @@ void Info::netstatInfo(){
     //下载速度
     DWORD dwOut = 0;
     //上传最后字节
-    DWORD dwLastIn = 0;
+   static DWORD dwLastIn = 0;
     //下载最后字节
-    DWORD dwLastOut = 0;
+   static DWORD dwLastOut = 0;
 
     GetIfTable(pTable, &dword, true);
     DWORD dwInOc = 0;
@@ -183,8 +234,8 @@ void Info::netstatInfo(){
     dwLastOut = dwOutOc;
 
     double in = static_cast<double>(dwIn) /1024/8;
-    double out = static_cast<double>(dwOut) / 1024/8;
-    // qDebug()<<"in="<<in<<",out="<<out;
+    double out = static_cast<double>(dwOut) /1024/8;
+    //qDebug()<<"in="<<in<<",out="<<out;
 
 
     d.netstatInfo["total"] = {
@@ -287,7 +338,7 @@ void Info::ipInfo(){
         QByteArray data = reply->readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
         QJsonObject root = doc.object();
-       QJsonObject dataObj = root["data"].toObject();
+        QJsonObject dataObj = root["data"].toObject();
 
         dataObj.insert("time", root["time"] );
 
@@ -314,7 +365,7 @@ const QString Info::localmachineName()
 /*
  * 本机局域网ip
  */
- void Info::netInterface()
+void Info::netInterface()
 {
 
 
