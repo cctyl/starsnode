@@ -12,6 +12,7 @@ QDebug operator<<(QDebug debug, const NetInterfaceInfo &p){
 }
 
 
+
 int main(int argc, char *argv[])
 {
 
@@ -22,50 +23,12 @@ int main(int argc, char *argv[])
     std::shared_ptr<Info> info = std::make_shared<Info>();
 
 
-    // QList<QString> ipList =  info->ip();
-    // for(QString & i : ipList){
-    //     qDebug().noquote()<<i ;
-    // }
-
-    // qDebug().noquote()<<  info->localmachineName();
-    // qDebug().noquote()<< info->mac();
-    // qDebug().noquote()<< info->cpuType();
-    // qDebug().noquote()<<  info->osVersion();
 
 
 
+    int r = a.exec();
+    return r;
 
-    // //cpuInfo 的封装
-    // info->cpuInfo();
-    // qDebug().noquote()<<qtjson::serialize(info->d.cpuInfo);
-
-
-    // //memInfo
-    // info->memInfo();
-    // qDebug().noquote()<<qtjson::serialize(info->d.memInfo);
-
-
-    // driverInfo
-    // info->driveInfo();
-    // qDebug().noquote()<<qtjson::serialize(info->d.driveInfo);
-
-    //netstatInfo
-    //info->netstatInfo();
-    //qDebug().noquote()<<qtjson::serialize(info->d.netstatInfo);
-
-    //netInterface
-    // info->netInterface();
-    // qDebug().noquote()<<qtjson::serialize(info->d.netInterface);
-
-    //osInfo
-    info-> osInfo();
-    qDebug().noquote()<<qtjson::serialize(info->d.osInfo);
-    qDebug()<<"启动";
-
-    // int r = a.exec();
-    // return r;
-
-    return 0;
+    // return 0;
 }
-
 

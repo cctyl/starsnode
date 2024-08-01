@@ -41,6 +41,10 @@ public:
 
     void osInfo();
 
+    void ipInfo();
+
+
+private:
     /*
      * 获取计算机名称
      */

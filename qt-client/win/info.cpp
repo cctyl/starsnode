@@ -2,7 +2,8 @@
 #define GB (1024.0 * 1024.0 * 1024.0)
 #define MB (1024.0 * 1024.0 )
 #include "iphlpapi.h"
-#include"QThread"
+#include<QThread>
+#include<QEventLoop>
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib,"pdh")
 #pragma execution_character_set("utf-8")
@@ -67,18 +68,73 @@ double Info::measureCpuUsage()
 Info::Info() {
 
 
-    // QTimer * timer = new QTimer(this);
+    //启动时更新一次ip信息
+    ipInfo();
 
-    // connect(
-    //     timer,
-    //     &QTimer::timeout,
-    //     [&]{
-    //         measure_cpu_usage();
-    //         ramInfo();
-    //     }
-    //     );
+    QTimer * timer = new QTimer(this);
 
-    // timer->start(1000);//间隔的秒数
+    connect(
+        timer,
+        &QTimer::timeout,
+        [&]{
+
+            // //cpuInfo 的封装
+            cpuInfo();
+            // qDebug().noquote()<<qtjson::serialize(info->d.cpuInfo);
+
+
+            // //memInfo
+            memInfo();
+            // qDebug().noquote()<<qtjson::serialize(info->d.memInfo);
+
+
+            // driverInfo
+            driveInfo();
+            // qDebug().noquote()<<qtjson::serialize(info->d.driveInfo);
+
+            //netstatInfo
+            netstatInfo();
+            //qDebug().noquote()<<qtjson::serialize(info->d.netstatInfo);
+
+            //netInterface
+           netInterface();
+            // qDebug().noquote()<<qtjson::serialize(info->d.netInterface);
+
+            //osInfo
+             osInfo();
+            //qDebug().noquote()<<qtjson::serialize(info->d.osInfo);
+
+
+
+            //ipInfo
+            //info->ipInfo();
+
+
+
+            qDebug().noquote()<<qtjson::serialize(d);
+
+        }
+        );
+
+    timer->start(3000);//间隔的毫秒值
+
+
+
+
+    QTimer * slowTimer = new QTimer(this);
+    connect(
+        slowTimer,
+        &QTimer::timeout,
+        [&]{
+
+            //一小时更新一次ip地址
+            ipInfo();
+            qDebug().noquote()<< "更新ip信息"<<qtjson::serialize(d.ipInfo);
+
+        }
+        );
+
+     slowTimer->start(3600000);//间隔的秒数 3600秒
 }
 
 
@@ -128,7 +184,7 @@ void Info::netstatInfo(){
 
     double in = static_cast<double>(dwIn) /1024/8;
     double out = static_cast<double>(dwOut) / 1024/8;
-    qDebug()<<"in="<<in<<",out="<<out;
+    // qDebug()<<"in="<<in<<",out="<<out;
 
 
     d.netstatInfo["total"] = {
@@ -155,7 +211,7 @@ void Info::driveInfo(){
     {
         QString dirName = dir.absolutePath();
         dirName.remove("/");
-        qDebug()<<dirName;
+        // qDebug()<<dirName;
         LPCWSTR lpcwstrDriver = (LPCWSTR)dirName.utf16();
         ULARGE_INTEGER liFreeBytesAvailable, liTotalBytes, liTotalFreeBytes;
 
@@ -184,7 +240,7 @@ void Info::memInfo()
 
     d.memInfo.totalMemMb =formatDouble( statex.ullTotalPhys  * 1.0 / MB);
     d.memInfo.freeMemMb = formatDouble(statex.ullAvailPhys * 1.0 / MB);
-    d.memInfo.usedMemMb =    d.memInfo.totalMemMb -  d.memInfo.freeMemMb;
+    d.memInfo.usedMemMb =   formatDouble( d.memInfo.totalMemMb -  d.memInfo.freeMemMb);
     d.memInfo.usedMemPercentage =  formatDouble(d.memInfo.usedMemMb/ d.memInfo.totalMemMb *100);
     d.memInfo.freeMemPercentage =  formatDouble(d.memInfo.freeMemMb/ d.memInfo.totalMemMb *100);
 }
@@ -204,13 +260,47 @@ void Info::osInfo(){
     d.osInfo.type = "Windows";
     d.osInfo.platform ="win";
     d.osInfo.release = osVersion();
-
     d.osInfo.hostname = localmachineName();
-
     d.osInfo.arch =  QSysInfo::currentCpuArchitecture();
     d.osInfo.uptime = formatDouble(getStartTime());
 }
 
+
+
+void Info::ipInfo(){
+
+    QNetworkAccessManager manager;
+
+    QUrl url("https://api.qjqq.cn/api/Local");
+    QNetworkRequest request(url);
+
+    // 发送GET请求
+    QNetworkReply *reply = manager.get(request);
+
+    // 等待请求完成
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    // 检查请求状态
+    if (reply->error() == QNetworkReply::NoError) {
+        QByteArray data = reply->readAll();
+        QJsonDocument doc = QJsonDocument::fromJson(data);
+        QJsonObject root = doc.object();
+       QJsonObject dataObj = root["data"].toObject();
+
+        dataObj.insert("time", root["time"] );
+
+        d.ipInfo = dataObj;
+    } else {
+        qDebug() << "Error:" << reply->errorString();
+    }
+
+    reply->deleteLater();
+
+
+
+}
 /*
  *
  * 计算机名
@@ -240,11 +330,11 @@ const QString Info::localmachineName()
 
 
 
-            qDebug()<< "===========QNetworkInterface============";
-            qDebug()<< f.hardwareAddress();
-            qDebug()<< f.humanReadableName();
-            qDebug()<< f.name();
-            qDebug()<< f.index();
+            // qDebug()<< "===========QNetworkInterface============";
+            // qDebug()<< f.hardwareAddress();
+            // qDebug()<< f.humanReadableName();
+            // qDebug()<< f.name();
+            // qDebug()<< f.index();
 
             QList<QNetworkAddressEntry> entryList = f.addressEntries();
             foreach(QNetworkAddressEntry entry, entryList)
@@ -253,12 +343,12 @@ const QString Info::localmachineName()
 
                 if(entry.ip() != QHostAddress::LocalHost )
                 {
-                    qDebug()<< "===========QNetworkInterface  QNetworkAddressEntry============";
+                    // qDebug()<< "===========QNetworkInterface  QNetworkAddressEntry============";
 
-                    qDebug()<< entry.ip().toString();
-                    qDebug()<< entry.ip().protocol();
-                    qDebug()<< entry.netmask().toString();
-                    qDebug()<< entry.broadcast().toString();
+                    // qDebug()<< entry.ip().toString();
+                    // qDebug()<< entry.ip().protocol();
+                    // qDebug()<< entry.netmask().toString();
+                    // qDebug()<< entry.broadcast().toString();
 
 
                     QString family;
