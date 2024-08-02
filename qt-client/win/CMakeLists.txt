@@ -21,6 +21,7 @@ add_executable(qt-websocket
   info.h info.cpp
   devinfo.h devinfo.cpp
   qtjson.hpp reflect.hpp
+  wininfo.cpp
 )
 target_link_libraries(qt-websocket Qt${QT_VERSION_MAJOR}::Core  Qt6::Network Qt6::WebSockets)
 

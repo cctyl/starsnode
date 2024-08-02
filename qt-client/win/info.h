@@ -31,17 +31,14 @@ public:
 
     DevInfo d;
 
-    void memInfo();
 
-    void cpuInfo();
 
-    void driveInfo();
 
-    void netstatInfo();
+
+
+    //通用实现
 
     void netInterface();
-
-    void osInfo();
 
     void ipInfo();
 
@@ -50,27 +47,38 @@ public:
     void onConnected();
 
     void onDisconnected();
+
+
+    // 不同操作系统分别实现
+    void memInfo();
+
+    void cpuInfo();
+
+    void driveInfo();
+
+    void netstatInfo();
+
+    void osInfo();
+
+
+
+
 private:
     /*
      * 获取计算机名称
      */
     const QString localmachineName();
 
-    const QString mac();
 
-    const QString cpuType();
 
-    const QString osVersion();
-
-    unsigned short getCpuCount();
-
-    double measureCpuUsage();
 
 
 private:
     QWebSocket * clientSocket;
-    QUrl url = QUrl("ws://10.0.8.1:6080/?token=abcdef&type=dev&endpointName=y7000p");
-
+    QString urlStr = "ws://10.0.8.1:6080/?token=abcdef&type=dev&endpointName=";
+    QUrl url;
 };
+
+double formatDouble(double source);
 
 #endif // INFO_H
