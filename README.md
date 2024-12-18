@@ -47,10 +47,13 @@ nodejs客户端几乎适配所有主流系统，win、linux、macos。
 
 ### 如果对性能敏感
 
-win和mac平台，使用qt客户端。
+win平台，使用qt客户端。
 
 linux平台，如果内核版本比较新，比如ubuntu22以上，建议使用qt客户端。
 如果是历史平台，比如centos系列，建议使用linux客户端，缺点是稳定性可能稍差。
+
+macos，理论上也可以使用linux客户端，但是编译是个问题
+
 
 ## 性能展示
 
@@ -89,4 +92,113 @@ win10以及win11实测，只占用2m左右的内存，百分之0.几的cpu
 </p>
 
 
-待完成。。。
+
+## 部署方式
+
+
+
+
+### 配置
+服务端的配置文件在 `server/config.js`，只需要设置port和token即可。
+
+nodejs客户端的配置文件，在其目录下的config.js 中，需要设置服务端地址(serverHost)，端口(port)，token。
+endpointName可省略，这是用于给客户端命名的。
+
+qt和c++客户端配置文件，在各自目录下的 config.json 文件中，需要设置服务端地址(server)，端口(port)，token。
+使用时，只需要把这个config.json，放在可执行文件的旁边即可。
+
+web端的配置写到了 simple-list.html中的625行：
+```
+const ws = new WebSocket("ws://服务端地址:服务器端口?token=你的token&type=view&endpointName=web");
+```
+
+### web端
+
+你可以选择部署到nginx中，也可以直接双击simple-list.html 在本地打开，如果你能直接访问服务端的话
+
+### 服务端
+
+
+```
+# 需要安装 nodejs16 及以上
+# 下载release文件中的server并解压
+cd server
+npm install
+#直接启动
+node app/server.js
+
+#或使用pm2启动，需要提前安装pm2，win平台似乎是不支持pm2的
+#pm2 start app/server.js --name starsnode
+
+```
+
+### js客户端
+
+```
+# 需要安装 nodejs16 及以上
+# 下载release文件中js-client并解压
+cd js-client
+npm install
+#直接启动
+node app/client.js
+
+#或使用pm2启动，需要提前安装pm2，win平台似乎是不支持pm2的
+#pm2 start app/client.js --name starsnode
+
+```
+
+
+### qt客户端
+
+#### win平台
+下载release文件，直接双击exe启动即可，启动后窗口会关闭，并在后台运行
+
+
+#### linux平台
+下载release文件(如果我打包了的话)
+```
+	chmod 755 ./qt-websocket
+	./qt-websocket
+```
+
+
+### linux客户端
+
+#### 使用编译好的
+直接下载解压并执行即可（如果我提供了的话）
+	
+#### 本地编译
+灰常简单。
+
+```
+# 安装常见开发环境
+sudo apt-get install build-essential libgl1-mesa-dev
+
+# 安装cmake
+sudo apt install cmake
+
+# 安装libcurl
+sudo apt-get install libcurl4-openssl-dev
+
+# 安装openssl开发工具
+sudo apt-get install libssl-dev
+ 
+# 下载源码并解压
+git clone https://github.com/cctyl/starsnode.git
+cd starsnode/client/linux-client
+
+#开始编译
+mkdir build
+cd build
+cmake ..
+make
+
+#执行
+./qt-websocket
+
+
+```
+
+
+
+

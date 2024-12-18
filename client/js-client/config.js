@@ -1,7 +1,7 @@
 module.exports = {
     port: 6080,
-    token: 'abcdef',
-    serverHost:'10.0.8.1',
+    token: '你的token',
+    serverHost:'服务端地址',
     endpointName: null
 };
 

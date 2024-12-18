@@ -1,5 +1,5 @@
 {
-  "server": "10.0.8.1",
+  "server": "服务端地址",
   "port": 6080,
-  "token": "abcdef"
+  "token": "你的token"
 }
