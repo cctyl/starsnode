@@ -5,8 +5,7 @@
 
 
 
-#define GB (1024.0 * 1024.0 * 1024.0)
-#define MB (1024.0 * 1024.0 )
+#include <Windows.h>
 #include "iphlpapi.h"
 #include<QThread>
 #include<QEventLoop>
@@ -148,10 +147,10 @@ void Info::netstatInfo(){
 
 
     d.netstatInfo["total"] = {
-        formatDouble(out),formatDouble(in)
-    };
+        formatDouble(in),formatDouble(out)
+};
 
-    delete [] pTable;
+delete [] pTable;
 
 
 }

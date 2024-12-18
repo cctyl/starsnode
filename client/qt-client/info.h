@@ -1,27 +1,28 @@
 #ifndef INFO_H
 #define INFO_H
-#include<QString>
-#include <QHostAddress>
-#include <QNetworkInterface>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QSysInfo>
-#include <QSettings>
-#include <QDebug>
-#include <QFileInfoList>
-#include <QDir>
-#include <QLibrary>
-#include <QTimer>
-#include <QHostInfo>
-#include <Windows.h>
-#include<QObject>
 #include "devinfo.h"
-#include <QWebSocket>
-#include <QUrl>
+#include <QDebug>
+#include <QDir>
+#include <QFileInfoList>
+#include <QHostAddress>
+#include <QHostInfo>
+#include <QLibrary>
+#include <QNetworkAccessManager>
+#include <QNetworkInterface>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
+#include <QSettings>
+#include <QString>
+#include <QSysInfo>
 #include <QTextStream>
-class Info : public QObject
-{
+#include <QTimer>
+#include <QUrl>
+#include <QWebSocket>
+
+#define GB (1024.0 * 1024.0 * 1024.0)
+#define MB (1024.0 * 1024.0 )
+class Info : public QObject {
 
     Q_OBJECT
 public:
@@ -29,14 +30,11 @@ public:
 
     ~Info();
 
+    void initConfig();
+
     DevInfo d;
 
-
-
-
-
-
-    //通用实现
+    // 通用实现
 
     void netInterface();
 
@@ -48,6 +46,10 @@ public:
 
     void onDisconnected();
 
+    /*
+     * 获取计算机名称
+     */
+    const QString localmachineName();
 
     // 不同操作系统分别实现
     void memInfo();
@@ -59,23 +61,10 @@ public:
     void netstatInfo();
 
     void osInfo();
-
-
-
-
+    bool firstInit = true;
 private:
-    /*
-     * 获取计算机名称
-     */
-    const QString localmachineName();
-
-
-
-
-
-private:
-    QWebSocket * clientSocket;
-    QString urlStr = "ws://10.0.8.1:6080/?token=abcdef&type=dev&endpointName=";
+    QWebSocket *clientSocket;
+    QString urlStr;
     QUrl url;
 };
 

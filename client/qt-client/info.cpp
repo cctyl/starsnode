@@ -13,6 +13,22 @@ double formatDouble(double source){
 }
 
 
+QString readConfigFile(QString & path){
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Failed to open file:" << path;
+        return QString();
+    }
+
+    // 一次性读取文件的全部内容
+    QByteArray content = file.readAll();
+
+    // 关闭文件
+    file.close();
+
+    // 将 QByteArray 转换为 QString
+    return  QString(content);
+}
 
 
 /**
@@ -48,13 +64,52 @@ Info::~Info(){
     }
 
 }
+
+
+void Info::initConfig(){
+    QString configPath = "config.json";
+    if(!QFileInfo(configPath).exists()){
+        qDebug()<<"文件不存在";
+        return;
+    }
+
+    QString jsonStr =  readConfigFile(configPath);
+    qDebug().noquote()<<jsonStr;
+    QJsonObject obj = qtjson::strToJson(jsonStr).toObject();
+
+    if(!( obj.contains("server")
+          &&
+          obj.contains("port")
+          &&
+          obj.contains("token")
+          )){
+
+        qDebug()<<"文件格式异常";
+        return ;
+    }
+
+    this->urlStr= QString("ws://%1:%2/?token=%3&type=dev&endpointName=%4")
+                       .arg(obj.value("server").toString())
+                       .arg(obj.value("port").toInt())
+                       .arg(obj.value("token").toString())
+                       .arg(localmachineName())
+        ;
+
+    qDebug()<<"初始化连接:"<<this->urlStr;
+
+
+}
 Info::Info() {
 
-
+    this->initConfig();
+    if(this->urlStr.isEmpty()){
+        qDebug()<<"初始化失败";
+        exit(0);
+        return;
+    }
     clientSocket = new QWebSocket();
 
     qDebug()<<"打开链接";
-    urlStr += localmachineName();
     url = QUrl(urlStr);
     clientSocket->open(url);
 
@@ -117,6 +172,10 @@ Info::Info() {
 
             clientSocket->sendTextMessage(qtjson::serialize(d));
 
+
+            if(firstInit){
+                firstInit = false;
+            }
         }
         );
 
@@ -139,6 +198,7 @@ Info::Info() {
         );
 
     slowTimer->start(3600000);//间隔的秒数 3600秒
+
 }
 
 
