@@ -170,6 +170,13 @@ node app/client.js
 #### 本地编译
 灰常简单。
 
+##### 环境要求
+```
+	gcc >= 5.4
+	c++ >= 14
+	cmake >= 3.0
+```
+
 ```
 # 安装常见开发环境
 sudo apt-get install build-essential libgl1-mesa-dev
