@@ -10,7 +10,7 @@
 
 #### 高性能
 
-c++编写的原生客户端和qt客户端
+c++编写的原生客户端和qt客户端，只占用%0.几的cpu，最低3.9M的内存
 
 #### 轻量级
 
@@ -18,10 +18,10 @@ c++编写的原生客户端和qt客户端
 
 #### 跨平台
 
-nodejs客户端几乎适配所有主流系统，win、linux、macos。
+nodejs客户端几乎适配所有主流系统，win、linux、macos、android。
 如要求性能，也可使用qt客户端，同样支持跨平台
 
-本库的js服务端参考了该项目：https://github.com/chaos-zhu/easynode，感谢原作者。
+本库的js服务端参考了该项目：https://github.com/chaos-zhu/easynode   感谢原作者。
 
 ## 效果图
 
@@ -59,7 +59,7 @@ macos，理论上也可以使用linux客户端，但是编译是个问题
 
 ### qt客户端
 
-win10以及win11实测，只占用2m左右的内存，百分之0.几的cpu
+win10以及win11实测，只占用5m左右的内存，百分之0.几的cpu
 
 #### win10 4c 12g x64
 <p align="center">
