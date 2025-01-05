@@ -76,6 +76,8 @@ win10以及win11实测，只占用2m左右的内存，百分之0.几的cpu
 
 在ubuntu和armbian均进行过测试，约占用14m左右的内存，百分之0.几的cpu。
 
+如果你不需要主机所在地的ip信息，甚至只占用3.9M。
+
 #### armbian 4c 4g arm64
 <p align="center">
     <img src="./img/armbian 4c 4g x64.png" >
