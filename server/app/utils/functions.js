@@ -1,4 +1,6 @@
 const axios = require('axios');
+const path = require('path');
+const config = require(path.join(process.cwd(), './config.js'));
 module.exports = {
 
     guid() {
@@ -15,5 +17,31 @@ module.exports = {
         } catch (error) {
             console.log('getIpInfo Error: ', new Date(), error)
         }
-    }
+    },
+
+    /**
+     * 发送告警信息
+     * @param messgae
+     * @returns {Promise<any>}
+     */
+    async sendAlert(messgae){
+        console.log("sendAlert messgae="+messgae)
+        if (!config.warnApi){
+            console.log("未配置告警信息，不推送");
+            return;
+        }
+        try {
+            const encodedMessage = encodeURIComponent(messgae);
+            let {data} = await axios.post(`${config.warnApi}/messages?content=${encodedMessage}`,null,{
+                headers: {
+                    'token': config.warnToken
+                }
+            });
+            console.log("sendAlert resp="+JSON.stringify(data));
+
+        } catch (error) {
+            console.log(`${config.warnApi}/messages?content=${messgae}`)
+            console.log('sendAlert Error: ', new Date(), error)
+        }
+    },
 }

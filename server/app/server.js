@@ -20,6 +20,12 @@ const devMap = {};
 const viewMap = {};
 
 /**
+ * 设备上次传输数据的时间
+ *
+ */
+const lastDataTimeMap = {};
+
+/**
  * os 数据map
  * @type {{}}
  */
@@ -58,8 +64,8 @@ function websocket_add_listener(socket, request) {
             socket.terminate();
     }
     targetMap[endpointName] = socket;
-
-
+    lastDataTimeMap[endpointName] = Math.floor(Date.now() / 1000);
+    func.sendAlert(`[starnode] ${endpointName} 上线了`);
     // close事件
     socket.on("close", function () {
         console.log(`client:${endpointName} close`);
@@ -79,7 +85,8 @@ function websocket_add_listener(socket, request) {
      * 处理响应
      */
     socket.on("message", function (data) {
-        console.log(`message from ${endpointName}==>${data.toString()}`);
+        console.log(`message from ${endpointName}`);
+        lastDataTimeMap[endpointName] = Math.floor(Date.now() / 1000);
         if (type === 'dev') {
             try {
                 handleMessage(socket, endpointName, JSON.parse(data.toString()));
@@ -94,12 +101,14 @@ function websocket_add_listener(socket, request) {
 
 /**
  * 销毁连接
- * @param enpointName
+ * @param endpointName
  */
-function destory(enpointName) {
-    delete devMap[enpointName];
-    delete viewMap[enpointName];
-    delete devDataMap[enpointName];
+function destory(endpointName) {
+    func.sendAlert(`[starnode] ${endpointName} 掉线`);
+    delete devMap[endpointName];
+    delete viewMap[endpointName];
+    delete devDataMap[endpointName];
+    delete lastDataTimeMap[endpointName];
 }
 
 /**
@@ -128,6 +137,14 @@ setInterval(args => {
         item.send(JSON.stringify({state: 200}))
     }
 
+    const now = Math.floor(Date.now() / 1000);
+    for (const endpointName in lastDataTimeMap) {
+        if (now - lastDataTimeMap[endpointName] >10 ){
+            console.log(`${endpointName}掉线`);
+            destory(endpointName);
+        }
+    }
+
 }, 1000);
 
 /**
@@ -152,6 +169,7 @@ setInterval(async args => {
 }, 30 * 60 * 1000);
 
 console.log(`监听:${config.port}`);
+func.sendAlert(`[starnode] 服务端启动`)
 //初始化时更新数据
 func.getIpInfo().then(value => {
     ipInfo = value;
