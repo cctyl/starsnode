@@ -65,7 +65,11 @@ function websocket_add_listener(socket, request) {
             socket.terminate();
     }
     targetMap[endpointName] = socket;
-    lastDataTimeMap[endpointName] = Math.floor(Date.now() / 1000);
+
+    if (type === 'dev'){
+        lastDataTimeMap[endpointName] = Math.floor(Date.now() / 1000);
+    }
+
     const clientIp =  socket._socket.remoteAddress;
     console.log(`Client connected with IP: ${clientIp}`);
 
@@ -158,13 +162,13 @@ setInterval(args => {
     const now = Math.floor(Date.now() / 1000);
     for (const endpointName in lastDataTimeMap) {
         let time = now - lastDataTimeMap[endpointName];
-        if (time >10 ){
+        if (time >20  ){
             console.log(`${endpointName}检查心跳后掉线`);
             func.sendAlert(`[starnode] ${endpointName}  检查心跳后掉线，超时${time}秒`);
             destory(endpointName);
         }
     }
-},5000);
+},2000);
 
 /**
  * 发送数据给观察的设备
