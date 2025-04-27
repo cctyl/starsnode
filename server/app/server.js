@@ -40,6 +40,7 @@ function websocket_add_listener(socket, request) {
     const token = query.token;
     const type = query.type;
     const endpointName = query.endpointName;
+
     if (!token || !type || !endpointName) {
         console.log("参数异常")
         socket.terminate();
@@ -69,6 +70,7 @@ function websocket_add_listener(socket, request) {
     // close事件
     socket.on("close", function () {
         console.log(`client:${endpointName} close`);
+        func.sendAlert(`[starnode] ${endpointName} close 掉线`);
         //置空socket
         destory(endpointName);
     });
@@ -76,6 +78,7 @@ function websocket_add_listener(socket, request) {
     // error事件
     socket.on("error", function (err) {
         console.log(`client:${endpointName} error`);
+        func.sendAlert(`[starnode] ${endpointName} error 掉线`);
         //置空socket
         destory(endpointName);
     });
@@ -85,7 +88,13 @@ function websocket_add_listener(socket, request) {
      * 处理响应
      */
     socket.on("message", function (data) {
-        console.log(`message from ${endpointName}`);
+        //console.log(`message from ${endpointName}`);
+        if (!devMap[endpointName] ){
+            console.log(`${endpointName} 掉线后仍在发送数据 `)
+            socket.close(1000, '服务端主动断开连接');
+            return;
+        }
+        firstConn = false;
         lastDataTimeMap[endpointName] = Math.floor(Date.now() / 1000);
         if (type === 'dev') {
             try {
@@ -104,7 +113,7 @@ function websocket_add_listener(socket, request) {
  * @param endpointName
  */
 function destory(endpointName) {
-    func.sendAlert(`[starnode] ${endpointName} 掉线`);
+
     delete devMap[endpointName];
     delete viewMap[endpointName];
     delete devDataMap[endpointName];
@@ -134,18 +143,25 @@ setInterval(args => {
 
     let socketArr = Object.values(devMap)
     for (let item of socketArr) {
-        item.send(JSON.stringify({state: 200}))
-    }
-
-    const now = Math.floor(Date.now() / 1000);
-    for (const endpointName in lastDataTimeMap) {
-        if (now - lastDataTimeMap[endpointName] >10 ){
-            console.log(`${endpointName}掉线`);
-            destory(endpointName);
-        }
+        item.send(JSON.stringify({}))
     }
 
 }, 1000);
+
+/**
+ * 超时检测
+ */
+setInterval(args => {
+    const now = Math.floor(Date.now() / 1000);
+    for (const endpointName in lastDataTimeMap) {
+        let time = now - lastDataTimeMap[endpointName];
+        if (time >10 ){
+            console.log(`${endpointName}检查心跳后掉线`);
+            func.sendAlert(`[starnode] ${endpointName}  检查心跳后掉线，超时${time}秒`);
+            destory(endpointName);
+        }
+    }
+},5000);
 
 /**
  * 发送数据给观察的设备
