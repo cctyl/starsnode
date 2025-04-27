@@ -66,7 +66,10 @@ function websocket_add_listener(socket, request) {
     }
     targetMap[endpointName] = socket;
     lastDataTimeMap[endpointName] = Math.floor(Date.now() / 1000);
-    func.sendAlert(`[starnode] ${endpointName} 上线了`);
+    const clientIp =  socket._socket.remoteAddress;
+    console.log(`Client connected with IP: ${clientIp}`);
+
+    func.sendAlert(`[starnode] 来自${clientIp} - ${endpointName} 上线了`);
     // close事件
     socket.on("close", function () {
         console.log(`client:${endpointName} close`);
