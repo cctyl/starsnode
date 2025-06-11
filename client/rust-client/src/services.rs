@@ -45,6 +45,14 @@ fn drive_info(d: &mut DevInfo) {
     let (total_gb, free_gb, used_gb) = disks
         .iter()
         .filter(|disk| {
+
+            if let Some(name) = disk.name().to_str(){
+
+               return !name.contains("overlay")
+            }else {
+                return false;
+            }
+
             // 只处理每个物理设备一次
             //如果元素存在则insert返回false
             processed_devices.insert(disk.name().to_owned())
