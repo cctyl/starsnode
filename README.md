@@ -10,7 +10,8 @@
 
 #### 高性能
 
-c++编写的原生客户端和qt客户端，只占用%0.几的cpu，最低3.9M的内存
+rust编写的原生客户端，只占用%0.几的cpu，最低3.9M的内存(不开启ip信息的情况，开启ipinfo 需要使用openssl会带来一定的内存开销)
+(c++原生客户端和qt客户端不再推荐)
 
 #### 轻量级
 
@@ -19,7 +20,7 @@ c++编写的原生客户端和qt客户端，只占用%0.几的cpu，最低3.9M�
 #### 跨平台
 
 nodejs客户端几乎适配所有主流系统，win、linux、macos、android。
-如要求性能，也可使用qt客户端，同样支持跨平台
+如要求性能，也可使用rust客户端，同样支持跨平台
 
 本库的js服务端参考了该项目：https://github.com/chaos-zhu/easynode   感谢原作者。
 
@@ -47,12 +48,15 @@ nodejs客户端几乎适配所有主流系统，win、linux、macos、android。
 
 ### 如果对性能敏感
 
-win平台，使用qt客户端。
+统一推荐rust客户端。有良好的跨平台支持
 
-linux平台，如果内核版本比较新，比如ubuntu22以上，建议使用qt客户端。
-如果是历史平台，比如centos系列，建议使用linux客户端，缺点是稳定性可能稍差。
+~~win平台，使用qt客户端。~~ 
 
-macos，理论上也可以使用linux客户端，但是编译是个问题
+~~linux平台，如果内核版本比较新，比如ubuntu22以上，建议使用qt客户端。~~ 
+
+~~如果是历史平台，比如centos系列，建议使用linux客户端，缺点是稳定性可能稍差。~~ 
+
+~~macos，理论上也可以使用linux客户端，但是编译是个问题~~ 
 
 
 ## 性能展示
@@ -161,9 +165,9 @@ node app/client.js
 
 
 ### qt客户端
-不在推荐使用，如有需要，参考 other-client.md
+不再推荐使用，如有需要，参考 other-client.md
 ### linux客户端
-不在推荐使用，如有需要，参考 other-client.md
+不再推荐使用，如有需要，参考 other-client.md
 
 
 
