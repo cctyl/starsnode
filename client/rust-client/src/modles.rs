@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::{collections::HashMap};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -67,7 +68,8 @@ pub struct DevInfo<> {
     pub drive_info:  Option<DriveInfo>,
     pub mem_info: Option< MemInfo>,
     pub net_interface:  Option<HashMap<String, Vec<NetworkInterfaceInfo>>>,
-    pub netstat_info:  Option<HashMap<String, NetstatInfo>>,
+    pub netstat_info:  HashMap<String, NetstatInfo>,
     pub opened_count: u16,
     pub os_info:  Option<OsInfo>,
+    pub ip_info:  Option<Value>,
 }

@@ -76,7 +76,13 @@ win10实测，软件大小只有3.67M, 只占用6m左右的内存，百分之0.3
     <img src="./img/rust_debian_2c_4g_x64.png" >
 </p>
 
+#### armbian 4c 4g x64
 
+开启ip信息后，占7M左右，0.3%cpu
+
+<p align="center">
+    <img src="./img/rust_armbian_4c_4g_x64.png" >
+</p>
 ## 部署方式
 
 

@@ -1,0 +1,5 @@
+{
+  "server": "服务端地址",
+  "port": 服务端端口,
+  "token": "token"
+}

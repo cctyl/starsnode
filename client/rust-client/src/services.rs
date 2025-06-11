@@ -2,10 +2,21 @@ use crate::{
     modles::*,
     utils::{byte_to_gb, byte_to_mb, round_f32},
 };
+use chrono::Local;
 use network_interface::NetworkInterface;
-    use network_interface::NetworkInterfaceConfig;
-use chrono::{Local, Timelike};
-use std::{collections::HashMap, error::Error, fs::{self, File}, io::{BufRead, BufReader}, net::TcpStream, rc::Rc, thread, time::Duration};
+use network_interface::NetworkInterfaceConfig;
+use reqwest::Body;
+use serde::de::value;
+use serde_json::Value;
+use std::{
+    collections::HashMap,
+    error::Error,
+    fs::{self, File},
+    io::{BufRead, BufReader},
+    net::TcpStream,
+    thread,
+    time::Duration,
+};
 use sysinfo::{Disks, Networks, System};
 use tungstenite::{Message, WebSocket, connect, stream::MaybeTlsStream};
 fn read_config(path: String) -> Result<Config, Box<dyn Error>> {
@@ -27,12 +38,23 @@ fn read_config(path: String) -> Result<Config, Box<dyn Error>> {
 /// 填充存储信息
 fn drive_info(d: &mut DevInfo) {
     let disks = Disks::new_with_refreshed_list();
+
+    // 使用 HashSet 记录已处理的设备
+    let mut processed_devices = std::collections::HashSet::new();
+
     let (total_gb, free_gb, used_gb) = disks
         .iter()
+        .filter(|disk| {
+            // 只处理每个物理设备一次
+            //如果元素存在则insert返回false
+            processed_devices.insert(disk.name().to_owned())
+        })
         .map(|disk| {
             let total = round_f32(byte_to_gb(disk.total_space() as f32));
             let free = round_f32(byte_to_gb(disk.available_space() as f32));
             let used = (total - free).round();
+
+            // println!("{disk:#?} total={total}, free={free}, used={used}");
 
             (total, free, used)
         })
@@ -85,8 +107,6 @@ fn mem_info(d: &mut DevInfo, sys: &mut System) {
         used_mem_mb,
         used_mem_percentage,
     });
-
-  
 }
 
 const IPV4_STR: &str = "IPv4";
@@ -138,14 +158,11 @@ fn net_interface(d: &mut DevInfo) {
     }
 
     d.net_interface = Some(map);
-
 }
 
-
 ///网速信息
-fn netstat_info(d: &mut DevInfo,networks: &mut Networks ){
-    let mut map: HashMap<String, NetstatInfo> = HashMap::new();
-   
+fn netstat_info(d: &mut DevInfo, networks: &mut Networks) {
+    
 
     thread::sleep(Duration::from_secs(1));
     networks.refresh(true);
@@ -157,7 +174,7 @@ fn netstat_info(d: &mut DevInfo,networks: &mut Networks ){
         if data.mac_address().to_string().ne("00:00:00:00:00:00") {
             let input_mb = round_f32(byte_to_mb(data.received() as f32));
             let output_mb = round_f32(byte_to_mb(data.transmitted() as f32));
-            map.insert(
+            d.netstat_info.insert(
                 interface_name.clone(),
                 NetstatInfo {
                     input_mb,
@@ -169,7 +186,7 @@ fn netstat_info(d: &mut DevInfo,networks: &mut Networks ){
         }
     }
 
-    map.insert(
+    d.netstat_info.insert(
         "total".to_string(),
         NetstatInfo {
             input_mb: total_input_mb,
@@ -177,9 +194,7 @@ fn netstat_info(d: &mut DevInfo,networks: &mut Networks ){
         },
     );
 
-
-    d.netstat_info = Some(map);
-    
+  
 }
 
 #[cfg(target_os = "windows")]
@@ -220,12 +235,13 @@ pub fn get_logged_in_user_count() -> usize {
     let reader = BufReader::new(file);
     let mut count = 0;
 
-    
-    for line in reader.lines().skip(1) { // 跳过标题行
+    for line in reader.lines().skip(1) {
+        // 跳过标题行
         let line = line.unwrap();
         let fields: Vec<&str> = line.split_whitespace().collect();
         // 检查状态码是否为 ESTABLISHED (01) 且本地端口为 22 (0016)
-        if fields.get(3) == Some(&"01") && fields.get(1).map(|s| s.contains(":0016")) == Some(true) {
+        if fields.get(3) == Some(&"01") && fields.get(1).map(|s| s.contains(":0016")) == Some(true)
+        {
             count += 1;
         }
     }
@@ -238,18 +254,12 @@ pub fn get_logged_in_user_count() -> usize {
     0
 }
 
-
 pub fn os_info(d: &mut DevInfo) {
-
-    
-
     if sysinfo::IS_SUPPORTED_SYSTEM {
-        
-
         let uptime = System::uptime();
         let arch = System::cpu_arch();
         let host_name = System::host_name();
-        let platform = System::distribution_id();
+        let platform = std::env::consts::OS.to_string();
         let type_ = System::distribution_id();
         let release = match (System::kernel_version(), System::long_os_version()) {
             (Some(release), Some(os)) => Some(format!(" {os} {release}")),
@@ -264,9 +274,8 @@ pub fn os_info(d: &mut DevInfo) {
             r#type: type_,
             uptime,
         };
-        
-        d.os_info = Some(os);
 
+        d.os_info = Some(os);
     } else {
         println!("This OS isn't supported (yet?).");
     }
@@ -284,6 +293,7 @@ pub fn run(path: String) -> Result<(), Box<dyn Error>> {
     //获取连接
     let mut socket = open_conn(&url)?;
     let mut dev = DevInfo::default();
+    dev.netstat_info =   HashMap::new();
     let mut sys = System::new_all();
     let mut networks = Networks::new_with_refreshed_list();
 
@@ -302,22 +312,19 @@ pub fn run(path: String) -> Result<(), Box<dyn Error>> {
         mem_info(&mut dev, &mut sys);
 
         //网速信息
-        netstat_info(&mut dev,&mut networks);
-
-        
+        netstat_info(&mut dev, &mut networks);
 
         //1分钟执行一次
         if last_1_update.is_none()
-        || (now
-            .signed_duration_since(last_1_update.unwrap())
-            .num_minutes()
-            >= 1)
+            || (now
+                .signed_duration_since(last_1_update.unwrap())
+                .num_minutes()
+                >= 1)
         {
             //登陆用户数
             dev.opened_count = get_logged_in_user_count() as u16;
-            last_1_update= Some(now);
+            last_1_update = Some(now);
         }
-
 
         //10分钟执行一次
         if last_10_update.is_none()
@@ -342,14 +349,13 @@ pub fn run(path: String) -> Result<(), Box<dyn Error>> {
                 .num_minutes()
                 >= 60)
         {
-
-
             os_info(&mut dev);
+
+            get_ip_info(&mut dev);
+
             last_60_update = Some(now);
             println!("60分钟执行了");
         }
-        
-
 
         let jsonstr = serde_json::to_string(&dev).unwrap();
 
@@ -376,8 +382,7 @@ pub fn run(path: String) -> Result<(), Box<dyn Error>> {
                 socket = open_conn(&url)?;
             }
         }
-        
-        
+
         std::thread::sleep(Duration::from_secs(1));
     }
     Ok(())
@@ -400,29 +405,29 @@ pub fn open_conn(url: &str) -> Result<WebSocket<MaybeTlsStream<TcpStream>>, Box<
 }
 
 pub fn get_url(c: &Config) -> String {
-    let device_name = "rust";
+    let device_name = System::host_name().unwrap_or("nonamepc".to_string());
     format!(
         "ws://{}:{}/?token={}&type=dev&endpointName={}",
         c.server, c.port, c.token, device_name
     )
 }
 
+pub fn get_ip_info(d: &mut DevInfo) {
+    match reqwest::blocking::get("http://ip-api.com/json?lang=zh-CN") {
+        Ok(resp) => {
+            let text = resp.text();
+            match text {
+                Ok(body) => {
+                    let Ok(json_value) = serde_json::from_str::<Value>(&body) else {
+                        eprintln!("json解析失败！");
 
-
-// #[test]
-// pub fn get_ip_info(){
-//     use http_request::*;
-//     use std::collections::HashMap;
-    
-//     let mut header: HashMap<&str, &str> = HashMap::new();
-//     header.insert("header-key", "header-value");
-    
-//     let response = RequestBuilder::new()
-//         .get("http://ip-api.com/json?lang=zh-CN")
-//         .headers(header)
-//         .timeout(6000)
-//         .send()
-//         .unwrap();
-    
-//     println!("{}", response.text());
-// }
+                        return;
+                    };
+                    d.ip_info = Some(json_value);
+                }
+                Err(e) => println!("请求错误：{e:#?}"),
+            }
+        }
+        Err(e) => println!("请求错误：{e:#?}"),
+    }
+}
