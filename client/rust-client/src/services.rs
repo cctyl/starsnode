@@ -5,7 +5,6 @@ use crate::{
 use chrono::Local;
 use network_interface::NetworkInterface;
 use network_interface::NetworkInterfaceConfig;
-use reqwest::Body;
 use serde::de::value;
 use serde_json::Value;
 use std::{
@@ -45,11 +44,9 @@ fn drive_info(d: &mut DevInfo) {
     let (total_gb, free_gb, used_gb) = disks
         .iter()
         .filter(|disk| {
-
-            if let Some(name) = disk.name().to_str(){
-
-               return !name.contains("overlay")
-            }else {
+            if let Some(name) = disk.name().to_str() {
+                return !name.contains("overlay");
+            } else {
                 return false;
             }
 
@@ -170,8 +167,6 @@ fn net_interface(d: &mut DevInfo) {
 
 ///网速信息
 fn netstat_info(d: &mut DevInfo, networks: &mut Networks) {
-    
-
     thread::sleep(Duration::from_secs(1));
     networks.refresh(true);
 
@@ -201,8 +196,6 @@ fn netstat_info(d: &mut DevInfo, networks: &mut Networks) {
             output_mb: total_output_mb,
         },
     );
-
-  
 }
 
 #[cfg(target_os = "windows")]
@@ -301,7 +294,7 @@ pub fn run(path: String) -> Result<(), Box<dyn Error>> {
     //获取连接
     let mut socket = open_conn(&url)?;
     let mut dev = DevInfo::default();
-    dev.netstat_info =   HashMap::new();
+    dev.netstat_info = HashMap::new();
     let mut sys = System::new_all();
     let mut networks = Networks::new_with_refreshed_list();
 
@@ -420,10 +413,13 @@ pub fn get_url(c: &Config) -> String {
     )
 }
 
+// #[test]
+// pub fn get_ip_info() {
 pub fn get_ip_info(d: &mut DevInfo) {
-    match reqwest::blocking::get("http://ip-api.com/json?lang=zh-CN") {
+
+    match  minreq::get("http://ip-api.com/json?lang=zh-CN") .send(){
         Ok(resp) => {
-            let text = resp.text();
+            let text = resp.as_str();
             match text {
                 Ok(body) => {
                     let Ok(json_value) = serde_json::from_str::<Value>(&body) else {
