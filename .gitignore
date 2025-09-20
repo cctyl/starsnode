@@ -153,3 +153,6 @@ Desktop.ini
 
 
 build
+
+Android/app/release/**
+Android/app/debug/**
