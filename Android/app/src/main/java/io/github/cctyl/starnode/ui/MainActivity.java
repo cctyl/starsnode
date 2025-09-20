@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
         for (DeviceInfo device : allDevices) {
             if (device.getOsInfo() != null) {
                 String osType = device.getOsInfo().getType();
-                if ("Windows_NT".equalsIgnoreCase(osType)) {
+                if ("windows".equalsIgnoreCase(osType) || "Windows_NT".equalsIgnoreCase(osType)) {
                     windowsCount++;
                 } else if ("Linux".equalsIgnoreCase(osType)) {
                     linuxCount++;
