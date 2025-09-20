@@ -1,10 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Material Design Primary Colors -->
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="primary_light">#BBDEFB</color>
+    
+    <!-- Accent Colors -->
+    <color name="accent">#03DAC5</color>
+    <color name="accent_dark">#018786</color>
+    
+    <!-- Background Colors -->
+    <color name="background">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_white">#FFFFFF</color>
+    
+    <!-- Status Colors -->
+    <color name="status_online">#4CAF50</color>
+    <color name="status_warning">#FF9800</color>
+    <color name="status_critical">#F44336</color>
+    
+    <!-- Gradient Colors for Cards -->
+    <color name="gradient_online_start">#4CAF50</color>
+    <color name="gradient_online_end">#45A049</color>
+    <color name="gradient_windows_start">#2196F3</color>
+    <color name="gradient_windows_end">#1976D2</color>
+    <color name="gradient_linux_start">#FF9800</color>
+    <color name="gradient_linux_end">#F57C00</color>
+    <color name="gradient_cpu_start">#9C27B0</color>
+    <color name="gradient_cpu_end">#7B1FA2</color>
+    <color name="gradient_memory_start">#F44336</color>
+    <color name="gradient_memory_end">#D32F2F</color>
+    <color name="gradient_disk_start">#4CAF50</color>
+    <color name="gradient_disk_end">#388E3C</color>
+    <color name="gradient_network_start">#2196F3</color>
+    <color name="gradient_network_end">#1976D2</color>
+    
+    <!-- Other Colors -->
+    <color name="divider">#E0E0E0</color>
+    <color name="ripple">#1976D2</color>
+    <color name="chip_background">#E3F2FD</color>
+    
+    <!-- Basic Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

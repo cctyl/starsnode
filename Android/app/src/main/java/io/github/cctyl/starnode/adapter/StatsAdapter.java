@@ -57,6 +57,29 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.StatViewHold
             statIcon.setText(item.getIcon());
             statNumber.setText(item.getNumber());
             statLabel.setText(item.getLabel());
+            
+            // 根据标签设置不同的背景渐变
+            int backgroundRes = getBackgroundResource(item.getLabel());
+            if (backgroundRes != 0) {
+                itemView.setBackgroundResource(backgroundRes);
+            }
+        }
+        
+        private int getBackgroundResource(String label) {
+            switch (label) {
+                case "在线设备":
+                    return R.drawable.gradient_stat_online;
+                case "Windows":
+                    return R.drawable.gradient_stat_windows;
+                case "Linux":
+                    return R.drawable.gradient_stat_linux;
+                case "CPU核心":
+                    return R.drawable.gradient_stat_cpu;
+                case "总内存":
+                    return R.drawable.gradient_stat_memory;
+                default:
+                    return R.drawable.gradient_stat_online;
+            }
         }
     }
 }

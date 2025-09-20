@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="100dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="12dp"
-    android:background="@drawable/metric_card_bg"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/surface">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="16dp">
 
+    <!-- 图标背景圆形 -->
     <TextView
         android:id="@+id/metricIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="🖥️"
-        android:textSize="20sp" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/metric_icon_cpu"
+        android:gravity="center"
+        android:text="💻"
+        android:textColor="@color/text_white"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/metricValue"
@@ -22,25 +33,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:text="14%"
-        android:textColor="#212121"
-        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
         android:textStyle="bold" />
-
-    <!-- 进度条 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_marginBottom="4dp"
-        android:background="#E0E0E0"
-        android:orientation="horizontal">
-
-        <View
-            android:id="@+id/progressFill"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="#45a0ff" />
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/metricLabel"
@@ -48,16 +43,25 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:text="CPU"
-        android:textColor="#212121"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:textColor="@color/text_secondary"
+        android:textSize="11sp"
+        android:textStyle="normal" />
 
     <TextView
         android:id="@+id/metricDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2核心"
-        android:textColor="#757575"
+        android:textColor="@color/text_hint"
         android:textSize="10sp" />
 
+    <!-- 隐藏的进度条填充，保持兼容性 -->
+    <View
+        android:id="@+id/progressFill"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
 </LinearLayout>
+
+</androidx.cardview.widget.CardView>

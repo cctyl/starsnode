@@ -112,10 +112,10 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
                 String osType = device.getOsInfo().getType();
                 if ("Linux".equalsIgnoreCase(osType)) {
                     deviceAvatar.setText("L");
-                    deviceAvatar.setBackgroundColor(Color.parseColor("#FF9800"));
+                    deviceAvatar.setBackgroundResource(R.drawable.gradient_device_linux);
                 } else if ("windows".equalsIgnoreCase(osType) || "Windows_NT".equalsIgnoreCase(osType)) {
                     deviceAvatar.setText("W");
-                    deviceAvatar.setBackgroundColor(Color.parseColor("#2196F3"));
+                    deviceAvatar.setBackgroundResource(R.drawable.gradient_device_windows);
                 } else {
                     deviceAvatar.setText("?");
                     deviceAvatar.setBackgroundColor(Color.parseColor("#9E9E9E"));
