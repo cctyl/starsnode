@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import io.github.cctyl.starnode.R;
@@ -38,7 +39,7 @@ public class MetricsAdapter extends RecyclerView.Adapter<MetricsAdapter.MetricVi
     }
 
     static class MetricViewHolder extends RecyclerView.ViewHolder {
-        private TextView metricIcon;
+        private ImageView metricIcon;
         private TextView metricValue;
         private TextView metricLabel;
         private TextView metricDetail;
@@ -54,7 +55,8 @@ public class MetricsAdapter extends RecyclerView.Adapter<MetricsAdapter.MetricVi
         }
 
         public void bind(MetricItem metric) {
-            metricIcon.setText(metric.getIcon());
+            // 根据指标类型设置相应的图标资源
+            setMetricIcon(metric.getIcon());
             metricValue.setText(metric.getValue());
             metricLabel.setText(metric.getLabel());
             metricDetail.setText(metric.getDetail());
@@ -76,6 +78,30 @@ public class MetricsAdapter extends RecyclerView.Adapter<MetricsAdapter.MetricVi
             } catch (IllegalArgumentException e) {
                 progressFill.setBackgroundColor(Color.parseColor("#45a0ff"));
             }
+        }
+
+        private void setMetricIcon(String iconType) {
+            int iconRes;
+            switch (iconType != null ? iconType.toLowerCase() : "") {
+                case "cpu":
+                    iconRes = R.drawable.ic_cpu_white;
+                    break;
+                case "memory":
+                case "mem":
+                    iconRes = R.drawable.ic_memory_white;
+                    break;
+                case "disk":
+                    iconRes = R.drawable.ic_disk_white;
+                    break;
+                case "network":
+                case "net":
+                    iconRes = R.drawable.ic_network_white;
+                    break;
+                default:
+                    iconRes = R.drawable.ic_cpu_white; // 默认图标
+                    break;
+            }
+            metricIcon.setImageResource(iconRes);
         }
     }
 }

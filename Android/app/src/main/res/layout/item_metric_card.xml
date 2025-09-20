@@ -16,16 +16,20 @@
     android:padding="16dp">
 
     <!-- 图标背景圆形 -->
-    <TextView
-        android:id="@+id/metricIcon"
+    <FrameLayout
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/metric_icon_cpu"
-        android:gravity="center"
-        android:text="💻"
-        android:textColor="@color/text_white"
-        android:textSize="18sp" />
+        android:background="@drawable/metric_icon_cpu">
+        
+        <ImageView
+            android:id="@+id/metricIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_cpu_white"
+            android:contentDescription="指标图标" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/metricValue"

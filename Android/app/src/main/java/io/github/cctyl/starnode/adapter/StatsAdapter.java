@@ -3,6 +3,7 @@ package io.github.cctyl.starnode.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,7 +43,7 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.StatViewHold
     }
 
     static class StatViewHolder extends RecyclerView.ViewHolder {
-        private TextView statIcon;
+        private ImageView statIcon;
         private TextView statNumber;
         private TextView statLabel;
 
@@ -54,14 +55,34 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.StatViewHold
         }
 
         public void bind(StatItem item) {
-            statIcon.setText(item.getIcon());
+            // 根据标签设置不同的图标
+            int iconRes = getIconResource(item.getLabel());
+            statIcon.setImageResource(iconRes);
+            
             statNumber.setText(item.getNumber());
             statLabel.setText(item.getLabel());
             
             // 根据标签设置不同的背景渐变
             int backgroundRes = getBackgroundResource(item.getLabel());
             if (backgroundRes != 0) {
-                itemView.setBackgroundResource(backgroundRes);
+                itemView.findViewById(R.id.statCardBackground).setBackgroundResource(backgroundRes);
+            }
+        }
+        
+        private int getIconResource(String label) {
+            switch (label) {
+                case "在线设备":
+                    return R.drawable.ic_devices_white;
+                case "Windows":
+                    return R.drawable.ic_windows_white;
+                case "Linux":
+                    return R.drawable.ic_linux_white;
+                case "CPU核心":
+                    return R.drawable.ic_cpu_white;
+                case "总内存":
+                    return R.drawable.ic_memory_white;
+                default:
+                    return R.drawable.ic_devices_white;
             }
         }
         

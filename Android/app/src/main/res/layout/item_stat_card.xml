@@ -18,14 +18,13 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/statIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginBottom="8dp"
-            android:text="📱"
-            android:textSize="24sp"
-            android:textColor="@color/text_white" />
+            android:src="@drawable/ic_devices_white"
+            android:contentDescription="统计图标" />
 
         <TextView
             android:id="@+id/statNumber"
