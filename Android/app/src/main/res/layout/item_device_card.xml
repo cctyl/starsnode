@@ -82,6 +82,32 @@
 
                     </LinearLayout>
 
+                    <!-- 开机时间信息 -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:text="⏰"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/deviceUptime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="运行 17天 18小时"
+                            android:textColor="@color/text_hint"
+                            android:textSize="11sp"
+                            android:fontFamily="sans-serif" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -117,19 +143,51 @@
                 android:layout_marginVertical="8dp"
                 android:background="#E0E0E0" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- 网络接口标题栏（可点击展开/收起） -->
+            <LinearLayout
+                android:id="@+id/networkHeaderContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="网络接口"
-                android:textColor="#212121"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:padding="8dp">
 
+                <TextView
+                    android:id="@+id/networkTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="网络接口"
+                    android:textColor="#212121"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/networkInterfaceCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="3个"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:id="@+id/networkExpandIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_expand_more"
+                    android:rotation="0" />
+
+            </LinearLayout>
+
+            <!-- 网络接口列表（默认隐藏） -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/networkInterfaceRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
         </LinearLayout>
 

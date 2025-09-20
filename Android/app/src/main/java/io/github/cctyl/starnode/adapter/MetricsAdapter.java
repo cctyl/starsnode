@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import io.github.cctyl.starnode.R;
@@ -39,6 +40,7 @@ public class MetricsAdapter extends RecyclerView.Adapter<MetricsAdapter.MetricVi
     }
 
     static class MetricViewHolder extends RecyclerView.ViewHolder {
+        private FrameLayout metricIconBackground;
         private ImageView metricIcon;
         private TextView metricValue;
         private TextView metricLabel;
@@ -47,6 +49,7 @@ public class MetricsAdapter extends RecyclerView.Adapter<MetricsAdapter.MetricVi
 
         public MetricViewHolder(@NonNull View itemView) {
             super(itemView);
+            metricIconBackground = itemView.findViewById(R.id.metricIconBackground);
             metricIcon = itemView.findViewById(R.id.metricIcon);
             metricValue = itemView.findViewById(R.id.metricValue);
             metricLabel = itemView.findViewById(R.id.metricLabel);
@@ -82,26 +85,54 @@ public class MetricsAdapter extends RecyclerView.Adapter<MetricsAdapter.MetricVi
 
         private void setMetricIcon(String iconType) {
             int iconRes;
-            switch (iconType != null ? iconType.toLowerCase() : "") {
+            int backgroundRes;
+            
+            String type = iconType != null ? iconType.toLowerCase() : "";
+            
+            switch (type) {
                 case "cpu":
                     iconRes = R.drawable.ic_cpu_white;
+                    backgroundRes = R.drawable.metric_icon_cpu;
                     break;
                 case "memory":
                 case "mem":
+                case "内存":
                     iconRes = R.drawable.ic_memory_white;
+                    backgroundRes = R.drawable.metric_icon_memory;
                     break;
                 case "disk":
+                case "硬盘":
+                case "磁盘":
+                case "存储":
                     iconRes = R.drawable.ic_disk_white;
+                    backgroundRes = R.drawable.metric_icon_disk;
                     break;
                 case "network":
                 case "net":
+                case "网络":
                     iconRes = R.drawable.ic_network_white;
+                    backgroundRes = R.drawable.metric_icon_network;
+                    break;
+                case "temperature":
+                case "temp":
+                case "温度":
+                    iconRes = R.drawable.ic_cpu_white; // 温度可以用CPU图标
+                    backgroundRes = R.drawable.metric_icon_temperature;
+                    break;
+                case "load":
+                case "负载":
+                    iconRes = R.drawable.ic_cpu_white;
+                    backgroundRes = R.drawable.metric_icon_cpu;
                     break;
                 default:
                     iconRes = R.drawable.ic_cpu_white; // 默认图标
+                    backgroundRes = R.drawable.metric_icon_cpu; // 默认背景
                     break;
             }
+            
+            // 设置图标和背景
             metricIcon.setImageResource(iconRes);
+            metricIconBackground.setBackgroundResource(backgroundRes);
         }
     }
 }

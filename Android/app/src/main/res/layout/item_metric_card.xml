@@ -17,17 +17,16 @@
 
     <!-- 图标背景圆形 -->
     <FrameLayout
+        android:id="@+id/metricIconBackground"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/metric_icon_cpu">
+        android:layout_marginBottom="8dp">
         
         <ImageView
             android:id="@+id/metricIcon"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_cpu_white"
             android:contentDescription="指标图标" />
     </FrameLayout>
 
