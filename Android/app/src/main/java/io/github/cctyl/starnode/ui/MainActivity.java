@@ -1,6 +1,9 @@
 package io.github.cctyl.starnode.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
     }
 
     private void initWebSocket() {
-        webSocketManager = new WebSocketManager();
+        webSocketManager = new WebSocketManager(this);
         webSocketManager.setListener(this);
         
         // 初始化空数据
@@ -322,5 +325,38 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
         // if (webSocketManager != null && !webSocketManager.isConnected()) {
         //     webSocketManager.connect();
         // }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivityForResult(intent, 1001);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1001 && resultCode == RESULT_OK) {
+            // 配置已更新，重新连接WebSocket
+            if (webSocketManager != null) {
+                webSocketManager.disconnect();
+                Toast.makeText(this, "正在使用新配置重新连接...", Toast.LENGTH_SHORT).show();
+                
+                // 延迟一秒后重新连接，确保断开完成
+                new android.os.Handler().postDelayed(() -> {
+                    webSocketManager.connect();
+                }, 1000);
+            }
+        }
     }
 }

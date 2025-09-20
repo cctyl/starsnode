@@ -1,5 +1,6 @@
 package io.github.cctyl.starnode.websocket;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -16,10 +17,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.github.cctyl.starnode.model.DeviceInfo;
+import io.github.cctyl.starnode.utils.ConfigManager;
 
 public class WebSocketManager {
     private static final String TAG = "WebSocketManager";
-    private static final String WEBSOCKET_URL = "ws://10.0.8.1:6080/?token=abcdef&type=view&endpointName=web-access";
     
     private WebSocketClient webSocketClient;
     private Handler mainHandler;
@@ -30,6 +31,7 @@ public class WebSocketManager {
     private int reconnectAttempts = 0;
     private static final int MAX_RECONNECT_ATTEMPTS = 5;
     private static final long RECONNECT_DELAY_MS = 5000; // 5秒重连延迟
+    private ConfigManager configManager;
 
     public interface WebSocketListener {
         void onDataReceived(List<DeviceInfo> devices);
@@ -38,9 +40,10 @@ public class WebSocketManager {
         void onError(String error);
     }
 
-    public WebSocketManager() {
+    public WebSocketManager(Context context) {
         mainHandler = new Handler(Looper.getMainLooper());
         gson = new Gson();
+        configManager = new ConfigManager(context);
     }
 
     public void setListener(WebSocketListener listener) {
@@ -57,7 +60,9 @@ public class WebSocketManager {
         shouldReconnect = true;
 
         try {
-            URI serverUri = new URI(WEBSOCKET_URL);
+            String websocketUrl = configManager.buildWebSocketUrl();
+            Log.d(TAG, "Connecting to: " + websocketUrl);
+            URI serverUri = new URI(websocketUrl);
             webSocketClient = new WebSocketClient(serverUri) {
                 @Override
                 public void onOpen(ServerHandshake handshake) {
