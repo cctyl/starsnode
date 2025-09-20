@@ -95,7 +95,7 @@
 
             </LinearLayout>
 
-            <!-- 搜索和筛选 -->
+            <!-- 设备筛选 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,25 +104,33 @@
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="16dp">
 
-                <!-- 搜索框 -->
-                <EditText
-                    android:id="@+id/searchEditText"
+                <!-- 设备选择器 -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/search_background"
-                    android:drawableStart="@drawable/ic_search"
-                    android:drawablePadding="12dp"
-                    android:hint="搜索设备名称或IP地址"
-                    android:inputType="text"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                <!-- 筛选标签 -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/filterChipsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <Spinner
+                        android:id="@+id/deviceSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/search_background"
+                        android:paddingHorizontal="16dp" />
+
+                    <Button
+                        android:id="@+id/clearFilterButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/search_background"
+                        android:text="显示全部"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:paddingHorizontal="16dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

@@ -1,6 +1,8 @@
 package io.github.cctyl.starnode.adapter;
 
 import android.graphics.Color;
+import android.os.Parcelable;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +14,13 @@ import io.github.cctyl.starnode.R;
 import io.github.cctyl.starnode.model.DeviceInfo;
 import io.github.cctyl.starnode.model.MetricItem;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
     private List<DeviceInfo> devices;
+    private Map<String, Parcelable> scrollStates = new HashMap<>();
 
     public DeviceAdapter(List<DeviceInfo> devices) {
         this.devices = devices;
@@ -26,7 +31,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     public DeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_device_card, parent, false);
-        return new DeviceViewHolder(view);
+        return new DeviceViewHolder(view, this);
     }
 
     @Override
@@ -44,6 +49,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         this.devices = newDevices;
         notifyDataSetChanged();
     }
+    
+    public void saveScrollState(String deviceKey, Parcelable state) {
+        scrollStates.put(deviceKey, state);
+    }
+    
+    public Parcelable getScrollState(String deviceKey) {
+        return scrollStates.get(deviceKey);
+    }
 
     static class DeviceViewHolder extends RecyclerView.ViewHolder {
         private TextView deviceAvatar;
@@ -51,9 +64,12 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         private TextView deviceLocation;
         private View statusIndicator;
         private RecyclerView metricsRecyclerView;
+        private LinearLayoutManager metricsLayoutManager;
+        private DeviceAdapter parentAdapter;
 
-        public DeviceViewHolder(@NonNull View itemView) {
+        public DeviceViewHolder(@NonNull View itemView, DeviceAdapter adapter) {
             super(itemView);
+            this.parentAdapter = adapter;
             deviceAvatar = itemView.findViewById(R.id.deviceAvatar);
             deviceName = itemView.findViewById(R.id.deviceName);
             deviceLocation = itemView.findViewById(R.id.deviceLocation);
@@ -61,12 +77,23 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
             metricsRecyclerView = itemView.findViewById(R.id.metricsRecyclerView);
 
             // 设置横向滑动的RecyclerView
-            LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext(), 
+            metricsLayoutManager = new LinearLayoutManager(itemView.getContext(), 
                     LinearLayoutManager.HORIZONTAL, false);
-            metricsRecyclerView.setLayoutManager(layoutManager);
+            metricsRecyclerView.setLayoutManager(metricsLayoutManager);
         }
 
         public void bind(DeviceInfo device) {
+            // 生成设备唯一标识符
+            String deviceKey = getDeviceKey(device);
+            
+            // 保存当前滑动状态（如果存在）
+            if (metricsLayoutManager != null) {
+                Parcelable currentState = metricsLayoutManager.onSaveInstanceState();
+                if (currentState != null) {
+                    parentAdapter.saveScrollState(deviceKey, currentState);
+                }
+            }
+            
             // 设置设备信息
             if (device.getOsInfo() != null) {
                 deviceName.setText(device.getOsInfo().getHostname() != null ? 
@@ -86,7 +113,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
                 if ("Linux".equalsIgnoreCase(osType)) {
                     deviceAvatar.setText("L");
                     deviceAvatar.setBackgroundColor(Color.parseColor("#FF9800"));
-                } else if ("Windows_NT".equalsIgnoreCase(osType)) {
+                } else if ("windows".equalsIgnoreCase(osType) || "Windows_NT".equalsIgnoreCase(osType)) {
                     deviceAvatar.setText("W");
                     deviceAvatar.setBackgroundColor(Color.parseColor("#2196F3"));
                 } else {
@@ -138,8 +165,28 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
             MetricsAdapter metricsAdapter = new MetricsAdapter(metrics);
             metricsRecyclerView.setAdapter(metricsAdapter);
 
+            // 恢复滑动状态
+            Parcelable savedState = parentAdapter.getScrollState(deviceKey);
+            if (savedState != null && metricsLayoutManager != null) {
+                metricsLayoutManager.onRestoreInstanceState(savedState);
+            }
+
             // 设置状态指示器颜色
             setStatusIndicator(device);
+        }
+        
+        private String getDeviceKey(DeviceInfo device) {
+            // 使用主机名和IP作为唯一标识符
+            StringBuilder key = new StringBuilder();
+            if (device.getOsInfo() != null) {
+                if (device.getOsInfo().getHostname() != null) {
+                    key.append(device.getOsInfo().getHostname());
+                }
+                if (device.getOsInfo().getIp() != null) {
+                    key.append("_").append(device.getOsInfo().getIp());
+                }
+            }
+            return key.length() > 0 ? key.toString() : "unknown_device";
         }
 
         private String getColorForUsage(double usage) {

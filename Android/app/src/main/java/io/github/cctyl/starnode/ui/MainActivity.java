@@ -1,8 +1,11 @@
 package io.github.cctyl.starnode.ui;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -10,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +29,16 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
     private TextView statusText;
     private RecyclerView statsRecyclerView;
     private RecyclerView deviceRecyclerView;
-    private EditText searchEditText;
+    private Spinner deviceSpinner;
+    private Button clearFilterButton;
     
     private StatsAdapter statsAdapter;
     private DeviceAdapter deviceAdapter;
     private List<DeviceInfo> allDevices;
     private List<DeviceInfo> filteredDevices;
     private WebSocketManager webSocketManager;
+    private ArrayAdapter<String> spinnerAdapter;
+    private List<String> deviceNameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
         initViews();
         setupRecyclerViews();
         initWebSocket();
-        setupSearch();
+        setupDeviceFilter();
     }
 
     private void initViews() {
@@ -54,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
         statusText = findViewById(R.id.statusText);
         statsRecyclerView = findViewById(R.id.statsRecyclerView);
         deviceRecyclerView = findViewById(R.id.deviceRecyclerView);
-        searchEditText = findViewById(R.id.searchEditText);
+        deviceSpinner = findViewById(R.id.deviceSpinner);
+        clearFilterButton = findViewById(R.id.clearFilterButton);
     }
 
     private void setupRecyclerViews() {
@@ -94,17 +99,25 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
     }
 
     private void updateUI() {
-        filteredDevices.clear();
-        filteredDevices.addAll(allDevices);
-        
-        // 更新状态文本
+        // 更新状态文本（显示所有设备数量）
         statusText.setText(allDevices.size() + " 在线");
         
-        // 更新统计数据
+        // 更新统计数据（基于所有设备）
         statsAdapter.updateStats(createStatsData());
         
-        // 更新设备列表
-        deviceAdapter.updateDevices(filteredDevices);
+        // 应用当前的筛选条件来更新设备列表
+        applyCurrentFilter();
+    }
+    
+    private void applyCurrentFilter() {
+        int currentSelection = deviceSpinner.getSelectedItemPosition();
+        if (currentSelection == 0) {
+            // 显示所有设备
+            showAllDevices();
+        } else {
+            // 显示特定设备
+            filterToDevice(currentSelection - 1);
+        }
     }
 
     private List<StatItem> createStatsData() {
@@ -144,59 +157,116 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
         return stats;
     }
 
-    private void setupSearch() {
-        searchEditText.addTextChangedListener(new TextWatcher() {
+    private void setupDeviceFilter() {
+        // 初始化设备名称列表
+        deviceNameList = new ArrayList<>();
+        deviceNameList.add("所有设备"); // 默认选项
+        
+        // 创建Spinner适配器
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, deviceNameList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        deviceSpinner.setAdapter(spinnerAdapter);
+        
+        // 设置Spinner选择监听器
+        deviceSpinner.setOnItemSelectedListener(createSpinnerListener());
+        
+        // 设置清除筛选按钮监听器
+        clearFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterDevices(s.toString());
+            public void onClick(View v) {
+                deviceSpinner.setSelection(0); // 选择"所有设备"
+                showAllDevices();
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
         });
     }
 
-    private void filterDevices(String query) {
+    private AdapterView.OnItemSelectedListener createSpinnerListener() {
+        return new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    // 选择"所有设备"
+                    showAllDevices();
+                } else {
+                    // 选择特定设备
+                    filterToDevice(position - 1);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                showAllDevices();
+            }
+        };
+    }
+
+    private void showAllDevices() {
         filteredDevices.clear();
+        filteredDevices.addAll(allDevices);
+        deviceAdapter.updateDevices(filteredDevices);
+    }
+
+    private void filterToDevice(int deviceIndex) {
+        filteredDevices.clear();
+        if (deviceIndex >= 0 && deviceIndex < allDevices.size()) {
+            filteredDevices.add(allDevices.get(deviceIndex));
+        }
+        deviceAdapter.updateDevices(filteredDevices);
+    }
+
+    private void updateDeviceSpinner() {
+        // 保存当前选中的设备索引
+        int currentSelection = deviceSpinner.getSelectedItemPosition();
+        String currentSelectedDevice = null;
+        if (currentSelection > 0 && currentSelection <= allDevices.size()) {
+            DeviceInfo currentDevice = allDevices.get(currentSelection - 1);
+            currentSelectedDevice = getDeviceDisplayName(currentDevice);
+        }
         
-        if (query.isEmpty()) {
-            filteredDevices.addAll(allDevices);
-        } else {
-            String lowerCaseQuery = query.toLowerCase();
-            for (DeviceInfo device : allDevices) {
-                boolean matches = false;
-                
-                // 检查主机名
-                if (device.getOsInfo() != null && device.getOsInfo().getHostname() != null) {
-                    if (device.getOsInfo().getHostname().toLowerCase().contains(lowerCaseQuery)) {
-                        matches = true;
-                    }
-                }
-                
-                // 检查IP地址
-                if (device.getOsInfo() != null && device.getOsInfo().getIp() != null) {
-                    if (device.getOsInfo().getIp().contains(lowerCaseQuery)) {
-                        matches = true;
-                    }
-                }
-                
-                // 检查城市信息
-                if (device.getIpInfo() != null && device.getIpInfo().getCity() != null) {
-                    if (device.getIpInfo().getCity().toLowerCase().contains(lowerCaseQuery)) {
-                        matches = true;
-                    }
-                }
-                
-                if (matches) {
-                    filteredDevices.add(device);
-                }
+        // 清空并重新填充设备列表
+        deviceNameList.clear();
+        deviceNameList.add("所有设备");
+        
+        for (DeviceInfo device : allDevices) {
+            deviceNameList.add(getDeviceDisplayName(device));
+        }
+        
+        spinnerAdapter.notifyDataSetChanged();
+        
+        // 尝试恢复之前的选择
+        if (currentSelectedDevice != null) {
+            int newIndex = deviceNameList.indexOf(currentSelectedDevice);
+            if (newIndex > 0) {
+                // 临时禁用监听器，避免触发不必要的筛选
+                deviceSpinner.setOnItemSelectedListener(null);
+                deviceSpinner.setSelection(newIndex);
+                deviceSpinner.setOnItemSelectedListener(createSpinnerListener());
+                // 手动应用筛选
+                filterToDevice(newIndex - 1);
+                return;
             }
         }
         
-        deviceAdapter.updateDevices(filteredDevices);
+        // 如果无法恢复之前的选择，默认选择"所有设备"
+        deviceSpinner.setOnItemSelectedListener(null);
+        deviceSpinner.setSelection(0);
+        deviceSpinner.setOnItemSelectedListener(createSpinnerListener());
+        showAllDevices();
+    }
+
+    private String getDeviceDisplayName(DeviceInfo device) {
+        StringBuilder name = new StringBuilder();
+        if (device.getOsInfo() != null && device.getOsInfo().getHostname() != null) {
+            name.append(device.getOsInfo().getHostname());
+        } else {
+            name.append("未知设备");
+        }
+        
+        if (device.getOsInfo() != null && device.getOsInfo().getIp() != null) {
+            name.append(" (").append(device.getOsInfo().getIp()).append(")");
+        }
+        
+        return name.toString();
     }
 
     // WebSocket监听器回调方法
@@ -206,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements WebSocketManager.
             allDevices.clear();
             allDevices.addAll(devices);
             updateUI();
+            updateDeviceSpinner();
         }
     }
 
