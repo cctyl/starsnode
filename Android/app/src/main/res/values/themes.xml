@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Starnode" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#1976d2</item>
+        <item name="colorPrimaryDark">#1565c0</item>
+        <item name="colorAccent">#03DAC5</item>
+    </style>
+</resources>

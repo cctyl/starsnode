@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统监控</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            color: #212121;
+            padding-bottom: 80px;
+        }
+
+        /* Material Design App Bar */
+        .app-bar {
+            background: #1976d2;
+            color: white;
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.14), 0 3px 4px rgba(0,0,0,0.12), 0 1px 5px rgba(0,0,0,0.2);
+        }
+
+        .app-bar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .status-chip {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* 横向滑动统计卡片 */
+        .stats-container {
+            padding: 16px 10px;
+            background: white;
+        }
+
+        .stats-scroll {
+            display: flex;
+            overflow-x: auto;
+            padding: 0 16px;
+            gap: 12px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .stats-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .stat-card {
+            min-width: 120px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            scroll-snap-align: start;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        /* 确保第一个和最后一个卡片有足够的边距 */
+        .stat-card:first-child {
+            margin-left: 0;
+        }
+
+        .stat-card:last-child {
+            margin-right: 0;
+        }
+
+        .stat-card.online {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        }
+
+        .stat-card.windows {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        }
+
+        .stat-card.linux {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
+        .stat-card.cpu {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+        }
+
+        .stat-card.memory {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* 搜索和筛选 */
+        .search-container {
+            background: white;
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 1px solid #e0e0e0;
+            border-radius: 24px;
+            font-size: 16px;
+            background: #f5f5f5;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            background: white;
+            border-color: #1976d2;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #757575;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip.active {
+            background: #1976d2;
+            color: white;
+        }
+
+        /* Material Design卡片 */
+        .device-list {
+            padding: 8px 16px;
+        }
+
+        .device-card {
+            background: white;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .device-card:active {
+            transform: scale(0.98);
+        }
+
+        .device-header {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .device-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .device-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .device-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .device-avatar.linux {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+
+        .device-avatar.windows {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+        }
+
+        .device-text h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #212121;
+            margin-bottom: 2px;
+        }
+
+        .device-location {
+            font-size: 12px;
+            color: #757575;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+        }
+
+        .status-indicator.warning {
+            background: #ff9800;
+        }
+
+        .status-indicator.critical {
+            background: #f44336;
+        }
+
+        /* 系统指标 - 移动端横向滑动 */
+        .metrics-container {
+            padding: 16px 0;
+        }
+
+        .metrics-scroll {
+            display: flex;
+            overflow-x: auto;
+            padding: 0 16px;
+            gap: 12px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .metrics-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .metric-card {
+            min-width: 100px;
+            flex-shrink: 0;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            scroll-snap-align: start;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .metric-icon.cpu {
+            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+        }
+
+        .metric-icon.memory {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+
+        .metric-icon.disk {
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+        }
+
+        .metric-icon.network {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #212121;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #757575;
+            font-weight: 400;
+        }
+
+        .metric-detail {
+            font-size: 10px;
+            color: #9e9e9e;
+            margin-top: 2px;
+        }
+
+        /* 进度条 */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin: 8px 0 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.6s ease, background-color 0.3s ease;
+        }
+
+        .progress-fill.normal {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+        }
+
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #ff9800, #ffc107);
+        }
+
+        .progress-fill.critical {
+            background: linear-gradient(90deg, #f44336, #ff5722);
+        }
+
+        /* 网络信息卡片 */
+        .network-card {
+            background: white;
+            margin: 0 16px 16px;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .network-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .network-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .network-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #212121;
+        }
+
+        .network-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .network-stat {
+            text-align: center;
+        }
+
+        .network-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #212121;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .network-stat-label {
+            font-size: 12px;
+            color: #757575;
+            margin-top: 4px;
+        }
+
+        .speed-icon {
+            font-size: 16px;
+        }
+
+        .speed-icon.download {
+            color: #4caf50;
+        }
+
+        .speed-icon.upload {
+            color: #2196f3;
+        }
+
+        /* 可展开的详细信息 - Material Design */
+        .expandable-section {
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .section-toggle {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #212121;
+            padding: 16px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .section-toggle:active {
+            background-color: #f5f5f5;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            color: #757575;
+            font-size: 18px;
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .section-content.expanded {
+            max-height: 500px;
+        }
+
+        .expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* 信息列表 */
+        .info-list {
+            list-style: none;
+            padding: 0 16px 16px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #757575;
+            font-weight: 400;
+        }
+
+        .info-value {
+            color: #212121;
+            font-weight: 500;
+            text-align: right;
+            word-break: break-all;
+            max-width: 60%;
+        }
+
+        /* Material Design FAB */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            /* 确保在iPhone上完全可见 */
+            min-width: 56px;
+            min-height: 56px;
+        }
+
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        .fab-mini {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+        }
+
+        /* iPhone安全区域适配 */
+        @supports (padding: max(0px)) {
+            .fab {
+                bottom: max(24px, env(safe-area-inset-bottom));
+                right: max(24px, env(safe-area-inset-right));
+            }
+        }
+
+        /* iPhone XR特定优化 */
+        @media screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+            .fab {
+                bottom: 34px; /* 增加底部距离避免被遮挡 */
+                right: 20px;  /* 确保右侧有足够空间 */
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            text-align: center;
+            padding: 60px 16px;
+            background: white;
+            margin: 16px;
+            border-radius: 12px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid #1976d2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        .loading-text {
+            color: #757575;
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Material Design动画 */
+        .ripple {
+            overflow: hidden;
+        }
+
+        .ripple::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .ripple:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 底部导航占位 */
+        .bottom-spacer {
+            height: 80px;
+        }
+
+        /* Snackbar通知 */
+        .snackbar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #323232;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .snackbar.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Material Design App Bar -->
+    <header class="app-bar">
+        <div class="app-bar-content">
+            <h1 class="app-title">系统监控</h1>
+            <div class="status-chip">
+                <div class="status-dot"></div>
+                <span>12 在线</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 横向滑动统计卡片 -->
+    <div class="stats-container">
+        <div class="stats-scroll">
+            <div class="stat-card online">
+                <div class="stat-icon">
+                    <span class="material-icons">devices</span>
+                </div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">在线设备</div>
+            </div>
+            <div class="stat-card windows">
+                <div class="stat-icon">
+                    <span class="material-icons">computer</span>
+                </div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">Windows</div>
+            </div>
+            <div class="stat-card linux">
+                <div class="stat-icon">
+                    <span class="material-icons">terminal</span>
+                </div>
+                <div class="stat-number">4</div>
+                <div class="stat-label">Linux</div>
+            </div>
+            <div class="stat-card cpu">
+                <div class="stat-icon">
+                    <span class="material-icons">memory</span>
+                </div>
+                <div class="stat-number">48</div>
+                <div class="stat-label">CPU核心</div>
+            </div>
+            <div class="stat-card memory">
+                <div class="stat-icon">
+                    <span class="material-icons">storage</span>
+                </div>
+                <div class="stat-number">256GB</div>
+                <div class="stat-label">总内存</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索和筛选 -->
+    <div class="search-container">
+        <div class="search-box">
+            <span class="material-icons search-icon">search</span>
+            <input type="text" class="search-input" placeholder="搜索设备名称或IP地址">
+        </div>
+        <div class="filter-chips">
+            <button class="filter-chip active">全部</button>
+            <button class="filter-chip">Windows</button>
+            <button class="filter-chip">Linux</button>
+            <button class="filter-chip">高负载</button>
+            <button class="filter-chip">广州</button>
+            <button class="filter-chip">深圳</button>
+        </div>
+    </div>
+
+    <!-- 设备列表 -->
+    <div class="device-list">
+        <!-- 设备1 - Linux服务器 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-title">
+                    <div class="device-name">
+                        <div class="device-avatar linux">L</div>
+                        <div class="device-text">
+                            <h3>j1800</h3>
+                            <div class="device-location">
+                                <span class="material-icons" style="font-size: 12px;">location_on</span>
+                                10.0.8.10 • 广州市
+                            </div>
+                        </div>
+                    </div>
+                    <div class="status-indicator critical"></div>
+                </div>
+            </div>
+            
+            <!-- 系统指标横向滑动 -->
+            <div class="metrics-container">
+                <div class="metrics-scroll">
+                    <div class="metric-card">
+                        <div class="metric-icon cpu">
+                            <span class="material-icons">memory</span>
+                        </div>
+                        <div class="metric-value">14%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill normal" style="width: 14%"></div>
+                        </div>
+                        <div class="metric-label">CPU</div>
+                        <div class="metric-detail">2核心</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon memory">
+                            <span class="material-icons">storage</span>
+                        </div>
+                        <div class="metric-value">64%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill warning" style="width: 64%"></div>
+                        </div>
+                        <div class="metric-label">内存</div>
+                        <div class="metric-detail">2.4/3.8GB</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon disk">
+                            <span class="material-icons">folder</span>
+                        </div>
+                        <div class="metric-value">90%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill critical" style="width: 90%"></div>
+                        </div>
+                        <div class="metric-label">磁盘</div>
+                        <div class="metric-detail">11.6/12.9GB</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon network">
+                            <span class="material-icons">schedule</span>
+                        </div>
+                        <div class="metric-value">18天</div>
+                        <div class="metric-label">运行时间</div>
+                        <div class="metric-detail">20时34分</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 网络信息 -->
+            <div class="network-card">
+                <div class="network-header">
+                    <div class="network-icon">
+                        <span class="material-icons">wifi</span>
+                    </div>
+                    <div class="network-title">网络流量</div>
+                </div>
+                <div class="network-stats">
+                    <div class="network-stat">
+                        <div class="network-stat-value">
+                            <span class="material-icons speed-icon download">arrow_downward</span>
+                            1.2 MB/s
+                        </div>
+                        <div class="network-stat-label">下载</div>
+                    </div>
+                    <div class="network-stat">
+                        <div class="network-stat-value">
+                            <span class="material-icons speed-icon upload">arrow_upward</span>
+                            0.5 MB/s
+                        </div>
+                        <div class="network-stat-label">上传</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 可展开的系统信息 -->
+            <div class="expandable-section">
+                <button class="section-toggle" onclick="toggleSection(this)">
+                    <span>系统信息</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="section-content">
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">操作系统</span>
+                            <span class="info-value">Linux</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">版本</span>
+                            <span class="info-value">4.15.0-213-generic</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">CPU型号</span>
+                            <span class="info-value">Intel Celeron J1800 @ 2.41GHz</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">国家</span>
+                            <span class="info-value">中国</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">ISP</span>
+                            <span class="info-value">Chinanet</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 可展开的网络信息 -->
+            <div class="expandable-section">
+                <button class="section-toggle" onclick="toggleSection(this)">
+                    <span>网络信息</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="section-content">
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">enp1s0 ↓</span>
+                            <span class="info-value">0.8 MB/s</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">enp1s0 ↑</span>
+                            <span class="info-value">0.3 MB/s</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">wgc ↓</span>
+                            <span class="info-value">0.0 KB/s</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">wgc ↑</span>
+                            <span class="info-value">0.0 KB/s</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 可展开的网卡信息 -->
+            <div class="expandable-section">
+                <button class="section-toggle" onclick="toggleSection(this)">
+                    <span>网卡接口</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="section-content">
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">enp1s0</span>
+                            <span class="info-value">192.168.0.70/24</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">MAC地址</span>
+                            <span class="info-value">00:2b:67:dd:5d:26</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">子网掩码</span>
+                            <span class="info-value">255.255.255.0</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设备2 - Windows工作站 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-title">
+                    <div class="device-name">
+                        <div class="device-avatar windows">W</div>
+                        <div class="device-text">
+                            <h3>WIN-PC-001</h3>
+                            <div class="device-location">
+                                <span class="material-icons" style="font-size: 12px;">location_on</span>
+                                10.0.8.15 • 广州市
+                            </div>
+                        </div>
+                    </div>
+                    <div class="status-indicator"></div>
+                </div>
+            </div>
+            
+            <div class="metrics-container">
+                <div class="metrics-scroll">
+                    <div class="metric-card">
+                        <div class="metric-icon cpu">
+                            <span class="material-icons">memory</span>
+                        </div>
+                        <div class="metric-value">35%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill normal" style="width: 35%"></div>
+                        </div>
+                        <div class="metric-label">CPU</div>
+                        <div class="metric-detail">4核心</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon memory">
+                            <span class="material-icons">storage</span>
+                        </div>
+                        <div class="metric-value">50%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill normal" style="width: 50%"></div>
+                        </div>
+                        <div class="metric-label">内存</div>
+                        <div class="metric-detail">8.0/16.0GB</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon disk">
+                            <span class="material-icons">folder</span>
+                        </div>
+                        <div class="metric-value">75%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill warning" style="width: 75%"></div>
+                        </div>
+                        <div class="metric-label">磁盘</div>
+                        <div class="metric-detail">375/500GB</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon network">
+                            <span class="material-icons">schedule</span>
+                        </div>
+                        <div class="metric-value">3天</div>
+                        <div class="metric-label">运行时间</div>
+                        <div class="metric-detail">12时45分</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 可展开的详细信息 -->
+            <div class="expandable-section">
+                <button class="section-toggle" onclick="toggleSection(this)">
+                    <span>详细信息</span>
+                    <span class="material-icons toggle-icon">expand_more</span>
+                </button>
+                <div class="section-content">
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">操作系统</span>
+                            <span class="info-value">Windows 10 Pro</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">CPU型号</span>
+                            <span class="info-value">Intel Core i5-8400</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">网络下载</span>
+                            <span class="info-value">2.8 MB/s</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">网络上传</span>
+                            <span class="info-value">1.2 MB/s</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设备3 - 高负载服务器 -->
+        <div class="device-card">
+            <div class="device-header">
+                <div class="device-title">
+                    <div class="device-name">
+                        <div class="device-avatar linux">U</div>
+                        <div class="device-text">
+                            <h3>ubuntu-server</h3>
+                            <div class="device-location">
+                                <span class="material-icons" style="font-size: 12px;">location_on</span>
+                                10.0.8.20 • 深圳市
+                            </div>
+                        </div>
+                    </div>
+                    <div class="status-indicator critical"></div>
+                </div>
+            </div>
+            
+            <div class="metrics-container">
+                <div class="metrics-scroll">
+                    <div class="metric-card">
+                        <div class="metric-icon cpu">
+                            <span class="material-icons">memory</span>
+                        </div>
+                        <div class="metric-value">94%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill critical" style="width: 94%"></div>
+                        </div>
+                        <div class="metric-label">CPU</div>
+                        <div class="metric-detail">8核心</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon memory">
+                            <span class="material-icons">storage</span>
+                        </div>
+                        <div class="metric-value">90%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill critical" style="width: 90%"></div>
+                        </div>
+                        <div class="metric-label">内存</div>
+                        <div class="metric-detail">28.8/32GB</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon disk">
+                            <span class="material-icons">folder</span>
+                        </div>
+                        <div class="metric-value">40%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill normal" style="width: 40%"></div>
+                        </div>
+                        <div class="metric-label">磁盘</div>
+                        <div class="metric-detail">400GB/1TB</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon network">
+                            <span class="material-icons">schedule</span>
+                        </div>
+                        <div class="metric-value">45天</div>
+                        <div class="metric-label">运行时间</div>
+                        <div class="metric-detail">8时12分</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部占位 -->
+    <div class="bottom-spacer"></div>
+
+    <!-- 加载状态 -->
+    <div class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">正在加载设备信息...</div>
+    </div>
+
+    <!-- Material Design FAB -->
+    <button class="fab" onclick="toggleIpv6()">
+        <span class="material-icons">visibility</span>
+    </button>
+
+    <!-- Snackbar通知 -->
+    <div class="snackbar" id="snackbar">已切换到 IPv4+IPv6 模式</div>
+
+    <script>
+        // 切换展开/折叠功能
+        function toggleSection(button) {
+            const content = button.nextElementSibling;
+            const section = button.parentElement;
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                section.classList.remove('expanded');
+            } else {
+                content.classList.add('expanded');
+                section.classList.add('expanded');
+            }
+        }
+
+        // IPv4/IPv6切换
+        let showIpv6 = false;
+        function toggleIpv6() {
+            showIpv6 = !showIpv6;
+            const fab = document.querySelector('.fab');
+            const snackbar = document.getElementById('snackbar');
+            
+            if (showIpv6) {
+                fab.innerHTML = '<span class="material-icons">visibility_off</span>';
+                snackbar.textContent = '已切换到 IPv4+IPv6 模式';
+            } else {
+                fab.innerHTML = '<span class="material-icons">visibility</span>';
+                snackbar.textContent = '已切换到 IPv4 模式';
+            }
+            
+            // 显示Snackbar
+            snackbar.classList.add('show');
+            setTimeout(() => {
+                snackbar.classList.remove('show');
+            }, 3000);
+        }
+
+        // 筛选芯片点击事件
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                // 移除所有active状态
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                // 添加当前active状态
+                this.classList.add('active');
+                
+                // 显示筛选反馈
+                const snackbar = document.getElementById('snackbar');
+                snackbar.textContent = `已筛选: ${this.textContent}`;
+                snackbar.classList.add('show');
+                setTimeout(() => {
+                    snackbar.classList.remove('show');
+                }, 2000);
+            });
+        });
+
+        // 搜索功能
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const deviceCards = document.querySelectorAll('.device-card');
+            
+            deviceCards.forEach(card => {
+                const deviceName = card.querySelector('h3').textContent.toLowerCase();
+                const deviceIp = card.querySelector('.device-location').textContent.toLowerCase();
+                
+                if (deviceName.includes(searchTerm) || deviceIp.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // 设备卡片点击效果
+        document.querySelectorAll('.device-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // 如果点击的不是切换按钮，则展开第一个详细信息区域
+                if (!e.target.classList.contains('section-toggle') && !e.target.classList.contains('toggle-icon')) {
+                    const firstToggle = this.querySelector('.section-toggle');
+                    if (firstToggle) {
+                        toggleSection(firstToggle);
+                    }
+                }
+            });
+        });
+
+        // Material Design Ripple效果
+        document.querySelectorAll('.filter-chip, .fab').forEach(element => {
+            element.classList.add('ripple');
+        });
+
+        // 模拟实时数据更新
+        function simulateDataUpdate() {
+            document.querySelectorAll('.metric-value').forEach(value => {
+                if (value.textContent.includes('%')) {
+                    const currentValue = parseInt(value.textContent);
+                    const variation = Math.floor(Math.random() * 6) - 3; // -3 to +3
+                    const newValue = Math.max(0, Math.min(100, currentValue + variation));
+                    value.textContent = newValue + '%';
+                    
+                    // 更新进度条
+                    const progressBar = value.parentElement.querySelector('.progress-fill');
+                    if (progressBar) {
+                        progressBar.style.width = newValue + '%';
+                        
+                        // 更新颜色
+                        progressBar.className = 'progress-fill';
+                        if (newValue >= 90) {
+                            progressBar.classList.add('critical');
+                        } else if (newValue >= 70) {
+                            progressBar.classList.add('warning');
+                        } else {
+                            progressBar.classList.add('normal');
+                        }
+                    }
+                }
+            });
+        }
+
+        // 每5秒更新一次数据
+        setInterval(simulateDataUpdate, 5000);
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('移动端监控仪表板加载完成');
+            
+            // 显示欢迎消息
+            setTimeout(() => {
+                const snackbar = document.getElementById('snackbar');
+                snackbar.textContent = '监控仪表板已准备就绪';
+                snackbar.classList.add('show');
+                setTimeout(() => {
+                    snackbar.classList.remove('show');
+                }, 3000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

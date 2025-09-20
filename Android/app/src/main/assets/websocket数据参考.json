@@ -1,0 +1,614 @@
+[
+  {
+    "cpuInfo": {
+      "cpuCount": 2,
+      "cpuModel": "Intel(R) Celeron(R) CPU  J1800  @ 2.41GHz",
+      "cpuUsage": 0
+    },
+    "driveInfo": {
+      "freeGb": 6.01,
+      "freePercentage": 44.06,
+      "totalGb": 13.64,
+      "usedGb": 7.62,
+      "usedPercentage": 55.87
+    },
+    "ipInfo": null,
+    "memInfo": {
+      "freeMemMb": 2958,
+      "freeMemPercentage": 77.82,
+      "totalMemMb": 3801,
+      "usedMemMb": 843,
+      "usedMemPercentage": 22.18
+    },
+    "netInterface": {
+      "enp1s0": [
+        {
+          "address": "192.168.0.253",
+          "boardcast": "192.168.0.255",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "54:f6:c5:fb:f:db",
+          "netmask": "255.255.255.0"
+        },
+        {
+          "address": "fe80::56f6:c5ff:fefb:fdb",
+          "boardcast": "N/A",
+          "family": "IPv6",
+          "internal": true,
+          "mac": "",
+          "netmask": "N/A"
+        }
+      ],
+      "lo": [
+        {
+          "address": "127.0.0.1",
+          "boardcast": "127.0.0.1",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "0:0:0:0:0:0",
+          "netmask": "255.0.0.0"
+        },
+        {
+          "address": "::1",
+          "boardcast": "N/A",
+          "family": "IPv6",
+          "internal": true,
+          "mac": "",
+          "netmask": "N/A"
+        }
+      ],
+      "wgc": [
+        {
+          "address": "10.0.8.10",
+          "boardcast": "10.0.8.10",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "0:0:0:0:0:0",
+          "netmask": "255.255.255.255"
+        }
+      ]
+    },
+    "netstatInfo": {
+      "enp1s0:": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "lo:": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "total": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgc:": {
+        "inputMb": 0,
+        "outputMb": 0
+      }
+    },
+    "openedCount": 0,
+    "osInfo": {
+      "arch": "x86_64",
+      "hostname": "debian",
+      "platform": "linux",
+      "release": "6.1.0-30-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.124-1 (2025-01-12)",
+      "type": "Linux",
+      "uptime": 1530189.74
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuCount": 0,
+      "cpuModel": "",
+      "cpuUsage": 0.74
+    },
+    "driveInfo": {
+      "freeGb": 6.32,
+      "freePercentage": 22.52,
+      "totalGb": 28.06,
+      "usedGb": 21.74,
+      "usedPercentage": 77.48
+    },
+    "ipInfo": null,
+    "memInfo": {
+      "freeMemMb": 2212,
+      "freeMemPercentage": 56.36,
+      "totalMemMb": 3925,
+      "usedMemMb": 1713,
+      "usedMemPercentage": 43.64
+    },
+    "netInterface": {
+      "br-3e591a63fff3": [
+        {
+          "address": "172.20.0.1",
+          "boardcast": "172.20.255.255",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "2:42:61:c7:9f:19",
+          "netmask": "255.255.0.0"
+        }
+      ],
+      "br-b59ec7d81761": [
+        {
+          "address": "172.27.0.1",
+          "boardcast": "172.27.255.255",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "2:42:20:d:a3:ac",
+          "netmask": "255.255.0.0"
+        }
+      ],
+      "br-cfbe9a5f9c39": [
+        {
+          "address": "172.19.0.1",
+          "boardcast": "172.19.255.255",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "2:42:7e:26:31:b0",
+          "netmask": "255.255.0.0"
+        },
+        {
+          "address": "fe80::42:7eff:fe26:31b0",
+          "boardcast": "N/A",
+          "family": "IPv6",
+          "internal": true,
+          "mac": "",
+          "netmask": "N/A"
+        }
+      ],
+      "br-fe4a090eb169": [
+        {
+          "address": "172.18.0.1",
+          "boardcast": "172.18.255.255",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "2:42:5c:e3:d8:69",
+          "netmask": "255.255.0.0"
+        }
+      ],
+      "docker0": [
+        {
+          "address": "172.17.0.1",
+          "boardcast": "172.17.255.255",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "2:42:de:1:bb:fd",
+          "netmask": "255.255.0.0"
+        },
+        {
+          "address": "fe80::42:deff:fe01:bbfd",
+          "boardcast": "N/A",
+          "family": "IPv6",
+          "internal": true,
+          "mac": "",
+          "netmask": "N/A"
+        }
+      ],
+      "eth0": [
+        {
+          "address": "192.168.0.12",
+          "boardcast": "192.168.0.255",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "66:94:9f:e6:60:fc",
+          "netmask": "255.255.255.0"
+        },
+        {
+          "address": "fe80::207f:1b5a:36f8:1b77",
+          "boardcast": "N/A",
+          "family": "IPv6",
+          "internal": true,
+          "mac": "",
+          "netmask": "N/A"
+        }
+      ],
+      "lo": [
+        {
+          "address": "127.0.0.1",
+          "boardcast": "127.0.0.1",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "0:0:0:0:0:0",
+          "netmask": "255.0.0.0"
+        },
+        {
+          "address": "::1",
+          "boardcast": "N/A",
+          "family": "IPv6",
+          "internal": true,
+          "mac": "",
+          "netmask": "N/A"
+        }
+      ],
+      "veth130ea23": [
+        {
+          "address": "fe80::546d:53ff:fe47:65b7",
+          "boardcast": "N/A",
+          "family": "IPv6",
+          "internal": true,
+          "mac": "",
+          "netmask": "N/A"
+        }
+      ],
+      "veth64ff42a": [
+        {
+          "address": "fe80::7c8e:63ff:fef9:1ec8",
+          "boardcast": "N/A",
+          "family": "IPv6",
+          "internal": true,
+          "mac": "",
+          "netmask": "N/A"
+        }
+      ],
+      "wgc": [
+        {
+          "address": "10.0.8.7",
+          "boardcast": "10.0.8.7",
+          "family": "IPv4",
+          "internal": true,
+          "mac": "0:0:0:0:0:0",
+          "netmask": "255.255.255.255"
+        }
+      ]
+    },
+    "netstatInfo": {
+      "br-3e591a63fff3": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-b59ec7d81761": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-cfbe9a5f9c39": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "br-fe4a090eb169": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "docker0:": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "eth0:": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "lo:": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "total": {
+        "inputMb": 0,
+        "outputMb": 0.01
+      },
+      "veth130ea23:": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "veth64ff42a:": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wgc:": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wlan0:": {
+        "inputMb": 0,
+        "outputMb": 0
+      }
+    },
+    "openedCount": 0,
+    "osInfo": {
+      "arch": "aarch64",
+      "hostname": "panther-x2",
+      "platform": "linux",
+      "release": "6.1.28-rockchip64 #1 SMP PREEMPT Thu May 11 14:04:52 UTC 2023",
+      "type": "Linux",
+      "uptime": 1530202.15
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuCount": 16,
+      "cpuModel": "Intel(R) Core(TM) i7-10875H CPU @ 2.30GHz",
+      "cpuUsage": 2.15
+    },
+    "driveInfo": {
+      "freeGb": 155.87,
+      "freePercentage": 32.77,
+      "totalGb": 475.69,
+      "usedGb": 320,
+      "usedPercentage": 67.27
+    },
+    "memInfo": {
+      "freeMemMb": 3620.63,
+      "freeMemPercentage": 22.22,
+      "totalMemMb": 16290.8,
+      "usedMemMb": 12670.17,
+      "usedMemPercentage": 77.78
+    },
+    "netInterface": {
+      "WLAN": [
+        {
+          "address": "fe80::ca5d:9817:7ad0:6a20",
+          "boardcast": "",
+          "family": "IPv6",
+          "mac": "C8:B2:9B:F5:95:F6",
+          "netmask": ""
+        },
+        {
+          "address": "10.238.74.20",
+          "boardcast": "10.238.75.255",
+          "family": "IPv4",
+          "mac": "C8:B2:9B:F5:95:F6",
+          "netmask": "255.255.254.0"
+        }
+      ],
+      "Loopback Pseudo-Interface 1": [
+        {
+          "address": "::1",
+          "boardcast": "",
+          "family": "IPv6",
+          "mac": null,
+          "netmask": ""
+        },
+        {
+          "address": "127.0.0.1",
+          "boardcast": "127.255.255.255",
+          "family": "IPv4",
+          "mac": null,
+          "netmask": "255.0.0.0"
+        }
+      ],
+      "本地连接* 2": [
+        {
+          "address": "fe80::823d:8890:d45c:cf34",
+          "boardcast": "",
+          "family": "IPv6",
+          "mac": "CA:B2:9B:F5:95:F6",
+          "netmask": ""
+        },
+        {
+          "address": "169.254.244.207",
+          "boardcast": "",
+          "family": "IPv4",
+          "mac": "CA:B2:9B:F5:95:F6",
+          "netmask": "255.255.0.0"
+        }
+      ],
+      "Npcap Loopback Adapter": [
+        {
+          "address": "fe80::551:6ffe:385d:e1e9",
+          "boardcast": "",
+          "family": "IPv6",
+          "mac": "02:00:4C:4F:4F:50",
+          "netmask": ""
+        },
+        {
+          "address": "169.254.140.248",
+          "boardcast": "169.254.255.255",
+          "family": "IPv4",
+          "mac": "02:00:4C:4F:4F:50",
+          "netmask": "255.255.0.0"
+        }
+      ],
+      "以太网": [
+        {
+          "address": "fe80::cfbb:3de3:b16e:88b4",
+          "boardcast": "",
+          "family": "IPv6",
+          "mac": "00:2B:67:DD:5D:26",
+          "netmask": ""
+        },
+        {
+          "address": "169.254.132.132",
+          "boardcast": "",
+          "family": "IPv4",
+          "mac": "00:2B:67:DD:5D:26",
+          "netmask": "255.255.0.0"
+        }
+      ],
+      "wgc8": [
+        {
+          "address": "10.0.8.8",
+          "boardcast": "10.0.8.255",
+          "family": "IPv4",
+          "mac": null,
+          "netmask": "255.255.255.255"
+        }
+      ]
+    },
+    "netstatInfo": {
+      "WLAN": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "Npcap Loopback Adapter": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "total": {
+        "inputMb": 0,
+        "outputMb": 0
+      }
+    },
+    "openedCount": 0,
+    "osInfo": {
+      "arch": "x86_64",
+      "hostname": "DESKTOP-C2GMBDN",
+      "platform": "windows",
+      "release": " Windows 10 Enterprise 19045",
+      "type": "windows",
+      "uptime": 439402
+    },
+    "ipInfo": {
+      "as": "AS4837 CHINA UNICOM China169 Backbone",
+      "city": "杭州",
+      "country": "中国",
+      "countryCode": "CN",
+      "isp": "CNC Group CHINA169 Zhejiang Province Network",
+      "lat": 30.2742,
+      "lon": 120.155,
+      "org": "",
+      "query": "123.148.4.173",
+      "region": "ZJ",
+      "regionName": "浙江",
+      "status": "success",
+      "timezone": "Asia/Shanghai",
+      "zip": "310000"
+    }
+  },
+  {
+    "cpuInfo": {
+      "cpuUsage": 2.56,
+      "cpuCount": 2,
+      "cpuModel": "Intel(R) Xeon(R) Gold 6148 CPU @ 2.40GHz"
+    },
+    "memInfo": {
+      "totalMemMb": 1975.36,
+      "usedMemMb": 913.87,
+      "freeMemMb": 1061.49,
+      "usedMemPercentage": 46.26,
+      "freeMemPercentage": 53.74
+    },
+    "driveInfo": {
+      "totalGb": "37.1",
+      "usedGb": "16.7",
+      "freeGb": "20.3",
+      "usedPercentage": "45.1",
+      "freePercentage": "54.9"
+    },
+    "netstatInfo": {
+      "total": {
+        "inputMb": 0.02,
+        "outputMb": 0.02
+      },
+      "eth0": {
+        "inputMb": 0.01,
+        "outputMb": 0.01
+      },
+      "docker0": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "vethc0f7f0c@if4": {
+        "inputMb": 0,
+        "outputMb": 0
+      },
+      "wg0": {
+        "inputMb": 0.01,
+        "outputMb": 0.01
+      }
+    },
+    "netInterface": {
+      "lo": [
+        {
+          "address": "127.0.0.1",
+          "netmask": "255.0.0.0",
+          "family": "IPv4",
+          "mac": "00:00:00:00:00:00",
+          "internal": true,
+          "cidr": "127.0.0.1/8"
+        },
+        {
+          "address": "::1",
+          "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+          "family": "IPv6",
+          "mac": "00:00:00:00:00:00",
+          "internal": true,
+          "cidr": "::1/128",
+          "scopeid": 0
+        }
+      ],
+      "eth0": [
+        {
+          "address": "172.16.0.3",
+          "netmask": "255.255.0.0",
+          "family": "IPv4",
+          "mac": "fa:16:3e:30:be:2b",
+          "internal": false,
+          "cidr": "172.16.0.3/16"
+        },
+        {
+          "address": "fe80::f816:3eff:fe30:be2b",
+          "netmask": "ffff:ffff:ffff:ffff::",
+          "family": "IPv6",
+          "mac": "fa:16:3e:30:be:2b",
+          "internal": false,
+          "cidr": "fe80::f816:3eff:fe30:be2b/64",
+          "scopeid": 2
+        }
+      ],
+      "docker0": [
+        {
+          "address": "172.17.0.1",
+          "netmask": "255.255.0.0",
+          "family": "IPv4",
+          "mac": "02:42:89:5d:48:b0",
+          "internal": false,
+          "cidr": "172.17.0.1/16"
+        },
+        {
+          "address": "fe80::42:89ff:fe5d:48b0",
+          "netmask": "ffff:ffff:ffff:ffff::",
+          "family": "IPv6",
+          "mac": "02:42:89:5d:48:b0",
+          "internal": false,
+          "cidr": "fe80::42:89ff:fe5d:48b0/64",
+          "scopeid": 3
+        }
+      ],
+      "wg0": [
+        {
+          "address": "10.0.8.1",
+          "netmask": "255.255.255.0",
+          "family": "IPv4",
+          "mac": "00:00:00:00:00:00",
+          "internal": false,
+          "cidr": "10.0.8.1/24"
+        }
+      ],
+      "vethc0f7f0c": [
+        {
+          "address": "fe80::7ce2:1fff:fe01:b6ea",
+          "netmask": "ffff:ffff:ffff:ffff::",
+          "family": "IPv6",
+          "mac": "7e:e2:1f:01:b6:ea",
+          "internal": false,
+          "cidr": "fe80::7ce2:1fff:fe01:b6ea/64",
+          "scopeid": 5
+        }
+      ]
+    },
+    "osInfo": {
+      "type": "Linux",
+      "platform": "linux",
+      "release": "5.15.0-60-generic",
+      "ip": "172.16.0.3",
+      "hostname": "lavm-iw8ur5bdm1",
+      "arch": "x64",
+      "uptime": 2854338.04
+    },
+    "openedCount": 0,
+    "ipInfo": {
+      "status": "success",
+      "country": "中国",
+      "countryCode": "CN",
+      "region": "BJ",
+      "regionName": "北京市",
+      "city": "朝外",
+      "zip": "",
+      "lat": 39.999,
+      "lon": 116.387,
+      "timezone": "Asia/Shanghai",
+      "isp": "JDCOM",
+      "org": "Beijing Jingdong 360 Degree E-commerce Co., Ltd.",
+      "as": "AS141679 China Telecom Beijing Tianjin Hebei Big Data Industry Park Branch",
+      "query": "117.72.170.216"
+    }
+  }
+]

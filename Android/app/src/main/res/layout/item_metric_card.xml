@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    android:background="@drawable/metric_card_bg"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/metricIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="🖥️"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/metricValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="14%"
+        android:textColor="#212121"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- 进度条 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#E0E0E0"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/progressFill"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="#45a0ff" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/metricLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="CPU"
+        android:textColor="#212121"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/metricDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2核心"
+        android:textColor="#757575"
+        android:textSize="10sp" />
+
+</LinearLayout>
