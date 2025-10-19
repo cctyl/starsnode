@@ -66,11 +66,11 @@ function websocket_add_listener(socket, request) {
     }
     targetMap[endpointName] = socket;
 
-    if (type === 'dev'){
+    if (type === 'dev') {
         lastDataTimeMap[endpointName] = Math.floor(Date.now() / 1000);
     }
 
-    const clientIp =  socket._socket.remoteAddress;
+    const clientIp = socket._socket.remoteAddress;
     console.log(`Client connected with IP: ${clientIp}`);
 
     func.sendAlert(`[starnode] 来自${clientIp} - ${endpointName} 上线了`);
@@ -96,7 +96,7 @@ function websocket_add_listener(socket, request) {
      */
     socket.on("message", function (data) {
         //console.log(`message from ${endpointName}`);
-        if (!devMap[endpointName] ){
+        if (!devMap[endpointName]) {
             console.log(`${endpointName} 掉线后仍在发送数据 `)
             socket.close(1000, '服务端主动断开连接');
             return;
@@ -162,13 +162,13 @@ setInterval(args => {
     const now = Math.floor(Date.now() / 1000);
     for (const endpointName in lastDataTimeMap) {
         let time = now - lastDataTimeMap[endpointName];
-        if (time >20  ){
+        if (time > 20) {
             console.log(`${endpointName}检查心跳后掉线`);
             func.sendAlert(`[starnode] ${endpointName}  检查心跳后掉线，超时${time}秒`);
             destory(endpointName);
         }
     }
-},2000);
+}, 2000);
 
 /**
  * 发送数据给观察的设备
@@ -198,4 +198,13 @@ func.getIpInfo().then(value => {
     ipInfo = value;
 });
 
+
+
+//额外接收http请求
+const {simpleHttpServer} = require('./simpleHttpServer');
+simpleHttpServer((endpointName, body) => {
+    console.log(`将${endpointName}加入集合`)
+    devDataMap[endpointName] = JSON.parse(body);
+    lastDataTimeMap[endpointName] = Math.floor(Date.now() / 1000);
+});
 

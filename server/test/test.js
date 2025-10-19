@@ -1,6 +1,6 @@
 const osu = require('node-os-utils')
 const os = require('os')
-const getOsData = require('./app/utils/os-data');
+const getOsData = require('../app/utils/os-data');
 
 
 (
@@ -9,3 +9,7 @@ const getOsData = require('./app/utils/os-data');
         console.log(result)
     }
 )();
+
+
+
+
