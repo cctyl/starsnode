@@ -46,6 +46,10 @@ local.properties
 # CDT-specific
 .cproject
 
+release
+*.apk
+
+
 # PDT-specific
 .buildpath
 
