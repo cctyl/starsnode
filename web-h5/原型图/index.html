@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>设备监控平台</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面标题 -->
+        <header class="header">
+            <h1>📊 设备监控平台</h1>
+            <div class="update-time">最后更新: <span id="updateTime">--</span></div>
+        </header>
+
+        <!-- 汇总信息区域 -->
+        <section class="summary-section">
+            <h2 class="section-title">📈 数据汇总</h2>
+            
+            <!-- 设备统计卡片 -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="card-icon">🖥️</div>
+                    <div class="card-content">
+                        <div class="card-label">在线设备总数</div>
+                        <div class="card-value" id="totalDevices">0</div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">🪟</div>
+                    <div class="card-content">
+                        <div class="card-label">Windows 设备</div>
+                        <div class="card-value" id="windowsDevices">0</div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">🐧</div>
+                    <div class="card-content">
+                        <div class="card-label">Linux 设备</div>
+                        <div class="card-value" id="linuxDevices">0</div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon">💻</div>
+                    <div class="card-content">
+                        <div class="card-label">其他系统</div>
+                        <div class="card-value" id="otherDevices">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 硬件汇总图表 -->
+            <div class="hardware-summary">
+                <div class="chart-card">
+                    <h3 class="chart-title">CPU 核心数汇总</h3>
+                    <div class="stat-value" id="totalCpuCores">0 核心</div>
+                    <div class="stat-desc">平均使用率: <span id="avgCpuUsage">0%</span></div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3 class="chart-title">内存汇总</h3>
+                    <div class="stat-value" id="totalMemory">0 GB</div>
+                    <canvas id="memoryChart"></canvas>
+                </div>
+                
+                <div class="chart-card">
+                    <h3 class="chart-title">磁盘汇总</h3>
+                    <div class="stat-value" id="totalDisk">0 GB</div>
+                    <canvas id="diskChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 设备详情区域 -->
+        <section class="devices-section">
+            <h2 class="section-title">🖥️ 设备详情</h2>
+            <div id="devicesList"></div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
