@@ -236,6 +236,25 @@ body {
     gap: 16px;
 }
 
+/* 为 Android WebView 提供 gap 属性的降级方案 */
+@supports not (gap: 16px) {
+    .hardware-summary {
+        gap: 0;
+    }
+
+    .cpu-row {
+        margin-bottom: 16px;
+    }
+
+    .charts-row {
+        margin-bottom: 16px;
+    }
+
+    .charts-row:last-child {
+        margin-bottom: 0;
+    }
+}
+
 /* 图表行容器 - 内存和磁盘汇总在同一行 */
 .charts-row {
     display: grid;
@@ -302,6 +321,19 @@ body {
     .cpu-row,
     .charts-row {
         gap: 8px; /* 手机端减小间距 */
+    }
+
+    /* 手机端硬件汇总间距保障 */
+    .cpu-row {
+        margin-bottom: 12px !important;
+    }
+
+    .charts-row {
+        margin-bottom: 12px !important;
+    }
+
+    .charts-row:last-child {
+        margin-bottom: 0 !important;
     }
 
     /* 手机端汇总卡片间距保障 */
@@ -1022,6 +1054,25 @@ body {
         gap: 16px;
     }
 
+    /* 平板及以上设备：为 Android WebView 提供间距保障 */
+    @supports not (gap: 16px) {
+        .hardware-summary {
+            gap: 0;
+        }
+
+        .cpu-row {
+            margin-bottom: 16px;
+        }
+
+        .charts-row {
+            margin-bottom: 16px;
+        }
+
+        .charts-row:last-child {
+            margin-bottom: 0;
+        }
+    }
+
     .device-info-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1089,6 +1140,25 @@ body {
     .charts-row {
         grid-template-columns: 1fr 1fr;
         gap: 20px;
+    }
+
+    /* 桌面端：为 Android WebView 提供间距保障 */
+    @supports not (gap: 20px) {
+        .hardware-summary {
+            gap: 0;
+        }
+
+        .cpu-row {
+            margin-bottom: 20px;
+        }
+
+        .charts-row {
+            margin-bottom: 20px;
+        }
+
+        .charts-row:last-child {
+            margin-bottom: 0;
+        }
     }
 }
 
