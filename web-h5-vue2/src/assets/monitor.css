@@ -164,6 +164,17 @@ body {
     animation: fadeIn 0.5s ease-out;
 }
 
+/* 为 Android WebView 提供 gap 属性的降级方案 */
+@supports not (gap: 12px) {
+    .summary-card {
+        gap: 0;
+    }
+
+    .card-icon {
+        margin-right: 12px;
+    }
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -184,6 +195,8 @@ body {
 .card-icon {
     font-size: 32px;
     line-height: 1;
+    /* 确保在 Android WebView 中有间距 */
+    margin-right: 12px;
 }
 
 .card-content {
@@ -282,6 +295,11 @@ body {
         gap: 8px; /* 手机端减小间距 */
     }
 
+    /* 手机端汇总卡片间距保障 */
+    .card-icon {
+        margin-right: 10px !important;
+    }
+
     /* CPU卡片样式调整 */
     .cpu-card {
         padding: 16px;
@@ -344,6 +362,16 @@ body {
         gap: 8px;
     }
 
+    /* 手机端强制设置间距以确保在 Android WebView 中正常显示 */
+    .device-summary-left {
+        margin-right: 8px !important;
+    }
+
+    /* 手机端确保设备名和CPU信息之间有间距 */
+    .device-name-row {
+        margin-bottom: 8px !important;
+    }
+
     .device-name {
         font-size: 14px;
     }
@@ -385,6 +413,21 @@ body {
 @media (max-width: 360px) {
     .device-summary {
         gap: 6px;
+    }
+
+    /* 超小屏幕也强制设置间距 */
+    .device-summary-left {
+        margin-right: 6px !important;
+    }
+
+    /* 超小屏幕确保设备名和CPU信息之间有间距 */
+    .device-name-row {
+        margin-bottom: 6px !important;
+    }
+
+    /* 超小屏幕汇总卡片间距保障 */
+    .card-icon {
+        margin-right: 8px !important;
     }
 
     .device-os-badge {
@@ -474,6 +517,21 @@ body {
     gap: 10px;
 }
 
+/* 为 Android WebView 提供降级方案 */
+@supports not (gap: 10px) {
+    .device-summary {
+        gap: 0;
+    }
+
+    .device-summary-left {
+        margin-right: 10px;
+    }
+
+    .device-summary-center {
+        margin-right: 10px;
+    }
+}
+
 .device-summary:hover {
     background: var(--bg-card-hover);
 }
@@ -482,6 +540,8 @@ body {
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    /* 确保在 Android WebView 中有最小间距 */
+    margin-right: 10px;
 }
 
 .device-summary-center {
@@ -491,6 +551,17 @@ body {
     gap: 6px;
     min-width: 0; /* 允许内容收缩 */
     margin-right: 6px; /* 给右侧留出更多空间 */
+}
+
+/* 为 Android WebView 提供 gap 属性的降级方案 */
+@supports not (gap: 6px) {
+    .device-summary-center {
+        gap: 0;
+    }
+
+    .device-name-row {
+        margin-bottom: 6px;
+    }
 }
 
 .device-summary-right {
