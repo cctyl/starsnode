@@ -39,9 +39,9 @@ nodejs客户端几乎适配所有主流系统，win、linux、macos、android。
 
 <table align="center">
   <tr>
-    <td><img src="./img/c.jpg" width="200"></td>
-    <td><img src="./img/d.jpg" width="200"></td>
-    <td><img src="./img/e.jpg" width="200"></td>
+    <td><img src="./img/c.jpg" width="230"></td>
+    <td><img src="./img/d.jpg" width="230"></td>
+    <td><img src="./img/e.jpg" width="230"></td>
   </tr>
 </table>
 
