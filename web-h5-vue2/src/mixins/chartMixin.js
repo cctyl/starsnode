@@ -52,9 +52,13 @@ export default {
           plugins: {
             legend: {
               position: 'bottom',
+              align: 'center',
               labels: {
                 color: '#cbd5e1',
-                font: { size: 11 }
+                font: { size: 10 },
+                boxWidth: 12,
+                padding: 8,
+                textAlign: 'center'
               }
             },
             tooltip: {
@@ -118,9 +122,13 @@ export default {
           plugins: {
             legend: {
               position: 'bottom',
+              align: 'center',
               labels: {
                 color: '#cbd5e1',
-                font: { size: 11 }
+                font: { size: 10 },
+                boxWidth: 12,
+                padding: 8,
+                textAlign: 'center'
               }
             },
             tooltip: {
