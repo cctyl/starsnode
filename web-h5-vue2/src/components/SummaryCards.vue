@@ -2,7 +2,7 @@
   <div class="summary-grid">
     <div class="summary-card">
       <div class="card-icon">
-        <img src="../assets/icons/server.svg" alt="总设备" class="card-icon-img">
+        <img src="../assets/icons/server.svg" alt="设备总数" class="card-icon-img">
       </div>
       <div class="card-content">
         <div class="card-label">在线设备总数</div>
