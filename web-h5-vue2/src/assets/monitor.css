@@ -1017,7 +1017,7 @@ body {
 /* 通知提示样式 */
 .notification {
     position: fixed;
-    top: calc(20px + env(safe-area-inset-top));
+    top: 30px;
     left: 50%;
     transform: translateX(-50%);
     padding: 12px 20px;
@@ -1095,7 +1095,7 @@ body {
 /* 手机端优化 */
 @media (max-width: 767px) {
     .notification {
-        top: calc(10px + env(safe-area-inset-top));
+        top: 30px;
         left: calc(16px + env(safe-area-inset-left));
         right: calc(16px + env(safe-area-inset-right));
         transform: none;

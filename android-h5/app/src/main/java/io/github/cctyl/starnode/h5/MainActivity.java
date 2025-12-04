@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         webviewInit();
         jsExecUtil = new JsExecUtil(webView);
         // 加载本地文件（确保文件在 assets 目录）
-        webView.loadUrl("file:///android_asset/index.html");
+//        webView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("http://192.168.31.151:8083/");
 
 
     }
