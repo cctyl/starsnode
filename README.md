@@ -37,11 +37,11 @@ nodejs客户端几乎适配所有主流系统，win、linux、macos、android。
 
 ### 移动端
 
-<div style="display:flex;justify-content:center;align-items:center;gap:10px;">
+<p align="center">
     <img src="./img/c.jpg" style="max-width:300px;height:auto;">
     <img src="./img/d.jpg" style="max-width:300px;height:auto;">
     <img src="./img/e.jpg" style="max-width:300px;height:auto;">
-</div>
+<p align="center">
 
 
 ## 平台构成
