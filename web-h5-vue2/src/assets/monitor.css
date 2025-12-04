@@ -171,8 +171,63 @@ body {
     gap: 12px;
 }
 
+/* CPU行容器 - CPU核心数和使用率在同一行 */
+.cpu-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* CPU核心数卡片的详细信息 */
+.cpu-details {
+    margin-top: 8px;
+}
+
+.cpu-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.cpu-stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.cpu-stat-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.cpu-progress {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-dark);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.cpu-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.cpu-progress-fill.high {
+    background: linear-gradient(90deg, var(--danger-color), var(--warning-color));
+}
+
+.cpu-progress-fill.medium {
+    background: linear-gradient(90deg, var(--warning-color), var(--success-color));
+}
+
 /* 手机端优化 */
 @media (max-width: 767px) {
+    .cpu-row,
     .charts-row {
         gap: 8px; /* 手机端减小间距 */
     }
@@ -182,20 +237,22 @@ body {
         padding: 16px;
     }
 
-    /* 内存和磁盘卡片样式调整 - 适配手机端 */
+    /* 内存、磁盘和CPU使用率卡片样式调整 - 适配手机端 */
     .memory-card,
-    .disk-card {
+    .disk-card,
+    .cpu-usage-card {
         padding: 12px;
     }
 
     /* 手机端字体大小调整 */
     .cpu-card .chart-title {
         font-size: 14px;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
 
     .memory-card .chart-title,
-    .disk-card .chart-title {
+    .disk-card .chart-title,
+    .cpu-usage-card .chart-title {
         font-size: 12px;
         margin-bottom: 6px;
     }
@@ -206,7 +263,8 @@ body {
     }
 
     .memory-card .stat-value,
-    .disk-card .stat-value {
+    .disk-card .stat-value,
+    .cpu-usage-card .stat-value {
         font-size: 16px;
         margin-bottom: 4px;
     }
@@ -224,7 +282,8 @@ body {
 
     /* 手机端图表画布大小限制 */
     .memory-card canvas,
-    .disk-card canvas {
+    .disk-card canvas,
+    .cpu-usage-card canvas {
         max-height: 100px !important;
         width: 100% !important;
     }
@@ -807,6 +866,7 @@ body {
         gap: 16px;
     }
 
+    .cpu-row,
     .charts-row {
         grid-template-columns: 1fr;
         gap: 16px;
@@ -819,14 +879,16 @@ body {
     /* 平板及以上设备的字体恢复 */
     .cpu-card .chart-title,
     .memory-card .chart-title,
-    .disk-card .chart-title {
+    .disk-card .chart-title,
+    .cpu-usage-card .chart-title {
         font-size: 14px;
         margin-bottom: 12px;
     }
 
     .cpu-card .stat-value,
     .memory-card .stat-value,
-    .disk-card .stat-value {
+    .disk-card .stat-value,
+    .cpu-usage-card .stat-value {
         font-size: 28px;
         margin-bottom: 8px;
     }
@@ -840,7 +902,8 @@ body {
 
     /* 平板及以上设备的图表画布恢复 */
     .memory-card canvas,
-    .disk-card canvas {
+    .disk-card canvas,
+    .cpu-usage-card canvas {
         max-height: none !important;
         width: 100% !important;
     }
@@ -853,10 +916,24 @@ body {
         padding: 32px;
     }
 
-    /* 桌面端可以并排显示所有三个图表 */
+    /* 桌面端可以并排显示所有图表 */
     .hardware-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .cpu-row {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
+    }
+
+    .cpu-row .cpu-card {
+        grid-column: span 1; /* CPU核心数卡片占1列 */
+    }
+
+    .cpu-row .cpu-usage-card {
+        grid-column: span 2; /* CPU使用率图表占2列，更多空间显示图表 */
     }
 
     .charts-row {

@@ -7,10 +7,84 @@ export default {
   data() {
     return {
       memoryChartInstance: null,
-      diskChartInstance: null
+      diskChartInstance: null,
+      cpuUsageChartInstance: null
     };
   },
   methods: {
+    // 创建CPU使用率图表
+    createCpuUsageChart(summary) {
+      const canvas = this.$refs.cpuUsageChart;
+      if (!canvas) return;
+
+      const avgUsage = summary.avgCpuUsage || 0;
+      const idlePercentage = Math.max(0, 100 - avgUsage);
+
+      // 如果图表已存在，只更新数据
+      if (this.cpuUsageChartInstance) {
+        this.updateCpuUsageChartData(summary);
+        return;
+      }
+
+      // 确保canvas是干净的
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      this.cpuUsageChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['使用率', '空闲'],
+          datasets: [{
+            data: [avgUsage, idlePercentage],
+            backgroundColor: [
+              'rgba(245, 101, 101, 0.8)',
+              'rgba(72, 187, 120, 0.8)'
+            ],
+            borderColor: [
+              'rgba(245, 101, 101, 1)',
+              'rgba(72, 187, 120, 1)'
+            ],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              align: 'center',
+              labels: {
+                color: '#cbd5e1',
+                font: { size: 10 },
+                boxWidth: 12,
+                padding: 8,
+                textAlign: 'center'
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return context.label + ': ' + context.parsed.toFixed(1) + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+    },
+
+    // 更新CPU使用率图表数据
+    updateCpuUsageChartData(summary) {
+      if (!this.cpuUsageChartInstance) return;
+
+      const avgUsage = summary.avgCpuUsage || 0;
+      const idlePercentage = Math.max(0, 100 - avgUsage);
+
+      this.cpuUsageChartInstance.data.datasets[0].data = [avgUsage, idlePercentage];
+      this.cpuUsageChartInstance.update('none'); // 使用 'none' 模式避免动画
+    },
+
     // 创建内存图表
     createMemoryChart(summary) {
       const canvas = this.$refs.memoryChart;
