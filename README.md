@@ -24,14 +24,23 @@ nodejs客户端几乎适配所有主流系统，win、linux、macos、android。
 
 本库的js服务端参考了该项目：https://github.com/chaos-zhu/easynode   感谢原作者。
 
-## 效果图
+## 总览效果图
 
+### pc端
 <p align="center">
     <img src="./img/a.png" >
 </p>
 
 <p align="center">
     <img src="./img/b.png" >
+</p>
+
+### 移动端
+
+<p align="center">
+    <img src="./img/c.jpg" >
+    <img src="./img/d.jpg" >
+    <img src="./img/e.jpg" >
 </p>
 
 ## 平台构成
