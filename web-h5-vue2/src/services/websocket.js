@@ -3,15 +3,30 @@ class WebSocketService {
   constructor() {
     this.ws = null;
     this.reconnectTimer = null;
-    this.reconnectDelay = 3000;
-    this.wsUrl = "ws://10.0.8.1:6080/?token=abcdef&type=view&endpointName=web-access";
+    this.reconnectDelay = 5000;
+    this.wsUrl = "";
     this.callbacks = {};
     this.connectionStatus = 'disconnected';
+    this.autoReconnect = true;
+    this.isManualDisconnect = false;
   }
 
   // 连接WebSocket
-  connect() {
+  connect(settings = {}) {
     try {
+      // 应用用户设置
+      if (settings.wsUrl) {
+        this.wsUrl = settings.wsUrl;
+      }
+      if (settings.reconnectInterval) {
+        this.reconnectDelay = settings.reconnectInterval * 1000;
+      }
+      if (settings.autoReconnect !== undefined) {
+        this.autoReconnect = settings.autoReconnect;
+      }
+
+      // 重置手动断开标志
+      this.isManualDisconnect = false;
       this.updateConnectionStatus('connecting', '正在连接...');
 
       this.ws = new WebSocket(this.wsUrl);
@@ -49,21 +64,36 @@ class WebSocketService {
 
       this.ws.onclose = () => {
         console.log('WebSocket连接已关闭');
-        this.updateConnectionStatus('disconnected', '连接已断开，准备重连...');
 
-        this.reconnectTimer = setTimeout(() => {
-          console.log('尝试重新连接...');
-          this.connect();
-        }, this.reconnectDelay);
+        // 只有在非手动断开时才显示断开连接通知
+        if (!this.isManualDisconnect) {
+          this.updateConnectionStatus('disconnected', '连接已断开');
+        }
+
+        // 根据用户设置决定是否自动重连
+        if (this.autoReconnect) {
+          if (!this.isManualDisconnect) {
+            this.updateConnectionStatus('disconnected', '连接已断开，准备重连...');
+          }
+          this.reconnectTimer = setTimeout(() => {
+            console.log('尝试重新连接...');
+            this.connect();
+          }, this.reconnectDelay);
+        } else {
+          this.updateConnectionStatus('disconnected', '连接已断开，自动重连已禁用');
+        }
       };
 
     } catch (error) {
       console.error('WebSocket连接失败:', error);
       this.updateConnectionStatus('error', '连接失败');
 
-      this.reconnectTimer = setTimeout(() => {
-        this.connect();
-      }, this.reconnectDelay);
+      // 根据用户设置决定是否自动重连
+      if (this.autoReconnect) {
+        this.reconnectTimer = setTimeout(() => {
+          this.connect();
+        }, this.reconnectDelay);
+      }
     }
   }
 
@@ -89,6 +119,9 @@ class WebSocketService {
 
   // 关闭连接
   disconnect() {
+    // 设置手动断开标志
+    this.isManualDisconnect = true;
+
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.close();
     }

@@ -1,5 +1,16 @@
 <template>
   <div class="container">
+    <!-- 设置按钮 -->
+    <button class="settings-btn" @click="showSettings">
+      ⚙️
+    </button>
+
+    <!-- 消息提示 -->
+    <div v-if="notification.show" :class="['notification', notification.type]" @click="hideNotification">
+      {{ notification.message }}
+      <button class="notification-close" @click.stop="hideNotification">×</button>
+    </div>
+
     <!-- 汇总信息区域 -->
     <section class="summary-section">
       <h2 class="section-title">📈 数据汇总</h2>
@@ -16,6 +27,14 @@
       :devices="devices"
       :loading-message="loadingMessage"
     />
+
+    <!-- 设置模态框 -->
+    <SettingsModal
+      :is-visible="isSettingsVisible"
+      :is-required="isSettingsRequired"
+      @close="hideSettings"
+      @settings-updated="onSettingsUpdated"
+    />
   </div>
 </template>
 
@@ -23,6 +42,7 @@
 import SummaryCards from '../components/SummaryCards.vue';
 import HardwareCharts from '../components/HardwareCharts.vue';
 import DeviceList from '../components/DeviceList.vue';
+import SettingsModal from '../components/SettingsModal.vue';
 import webSocketService from '../services/websocket.js';
 
 export default {
@@ -30,7 +50,8 @@ export default {
   components: {
     SummaryCards,
     HardwareCharts,
-    DeviceList
+    DeviceList,
+    SettingsModal
   },
   data() {
     return {
@@ -39,7 +60,14 @@ export default {
       connectionMessage: '未连接',
       lastUpdateTime: new Date(),
       loadingMessage: '正在建立连接...',
-      timeUpdateInterval: null
+      timeUpdateInterval: null,
+      isSettingsVisible: false,
+      isSettingsRequired: false,
+      notification: {
+        show: false,
+        message: '',
+        type: 'info', // 'success', 'error', 'info', 'warning'
+      }
     };
   },
   computed: {
@@ -113,6 +141,85 @@ export default {
     }
   },
   methods: {
+    // 显示设置模态框
+    showSettings() {
+      this.isSettingsVisible = true;
+    },
+
+    // 隐藏设置模态框
+    hideSettings() {
+      this.isSettingsVisible = false;
+    },
+
+    // 显示通知消息
+    showNotification(message, type = 'info', duration = 3000) {
+      this.notification = {
+        show: true,
+        message: message,
+        type: type
+      };
+
+      if (duration > 0) {
+        setTimeout(() => {
+          this.hideNotification();
+        }, duration);
+      }
+    },
+
+    // 隐藏通知消息
+    hideNotification() {
+      this.notification.show = false;
+    },
+
+    // 显示设置模态框（必需模式）
+    showRequiredSettings() {
+      this.isSettingsRequired = true;
+      this.isSettingsVisible = true;
+    },
+
+    // 隐藏设置模态框（必需模式）
+    hideRequiredSettings() {
+      this.isSettingsRequired = false;
+      this.isSettingsVisible = false;
+    },
+
+    // 加载用户设置并连接WebSocket
+    loadAndConnect() {
+      // 从localStorage加载设置
+      let settings = {};
+      const savedSettings = localStorage.getItem('monitorSettings');
+
+      if (savedSettings) {
+        try {
+          settings = JSON.parse(savedSettings);
+        } catch (error) {
+          console.error('Failed to load settings:', error);
+          settings = {};
+        }
+      }
+
+      // 如果没有WebSocket地址，显示设置界面
+      if (!settings.wsUrl || !settings.wsUrl.trim()) {
+        this.showNotification('请先配置WebSocket服务器地址', 'warning');
+        this.showRequiredSettings();
+        return;
+      }
+
+      // 使用设置连接WebSocket
+      this.showNotification('正在连接WebSocket服务器...', 'info');
+      webSocketService.connect(settings);
+    },
+
+    // 处理设置更新
+    onSettingsUpdated(settings) {
+      // 重新连接WebSocket使用新的设置
+      webSocketService.disconnect();
+      this.showNotification('正在重新连接WebSocket服务器...', 'info');
+      setTimeout(() => {
+        webSocketService.connect(settings);
+      }, 100);
+    },
+
     // 处理接收到的设备数据
     processDevicesData(devices) {
       if (devices.length === 0) {
@@ -137,10 +244,13 @@ export default {
 
       if (status === 'connected') {
         this.loadingMessage = '正在接收设备数据...';
+        this.showNotification('WebSocket服务器连接成功！', 'success');
       } else if (status === 'disconnected') {
         this.loadingMessage = '连接已断开，准备重连...';
+        this.showNotification('WebSocket连接已断开', 'warning');
       } else if (status === 'error') {
         this.loadingMessage = '连接出错，请检查网络连接';
+        this.showNotification('WebSocket连接失败，请检查服务器地址和网络连接', 'error');
       }
     }
   },
@@ -149,8 +259,8 @@ export default {
     webSocketService.on('onData', this.processDevicesData);
     webSocketService.on('onStatusChange', this.updateConnectionStatus);
 
-    // 连接WebSocket
-    webSocketService.connect();
+    // 加载用户设置并连接WebSocket
+    this.loadAndConnect();
 
     // 定期更新时间显示
     this.timeUpdateInterval = setInterval(this.updateTimestamp, 1000);
