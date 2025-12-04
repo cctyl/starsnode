@@ -228,6 +228,77 @@ body {
         max-height: 100px !important;
         width: 100% !important;
     }
+
+    /* 手机端设备卡片优化 */
+    .device-summary {
+        padding: 12px 16px;
+        gap: 8px;
+    }
+
+    .device-name {
+        font-size: 14px;
+    }
+
+    .device-os-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    .cpu-usage-summary {
+        max-width: 160px;
+        padding: 3px 6px;
+        width: 100%;
+    }
+
+    .cpu-label {
+        font-size: 9px;
+    }
+
+    .cpu-value {
+        font-size: 10px;
+        min-width: 25px;
+    }
+
+    .mini-progress-bar {
+        width: 40px;
+        height: 2px;
+        flex: 1;
+        min-width: 25px;
+    }
+
+    .expand-toggle-icon {
+        font-size: 12px;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+    .device-summary {
+        gap: 6px;
+    }
+
+    .device-os-badge {
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+    }
+
+    .cpu-usage-summary {
+        max-width: 140px;
+        gap: 4px;
+        width: 100%;
+    }
+
+    .cpu-label {
+        display: none; /* 在超小屏幕上隐藏CPU标签 */
+    }
+
+    .mini-progress-bar {
+        width: 35px;
+        flex: 1;
+        min-width: 20px;
+    }
 }
 
 .chart-card {
@@ -275,12 +346,150 @@ body {
 .device-card {
     background: var(--bg-card);
     border-radius: var(--radius-lg);
-    padding: 20px;
     margin-bottom: 16px;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border-color);
     transition: all 0.3s ease;
     animation: slideUp 0.5s ease-out;
+    overflow: hidden;
+}
+
+/* 设备摘要视图（折叠状态） */
+.device-summary {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    gap: 10px;
+}
+
+.device-summary:hover {
+    background: var(--bg-card-hover);
+}
+
+.device-summary-left {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.device-summary-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0; /* 允许内容收缩 */
+    margin-right: 6px; /* 给右侧留出更多空间 */
+}
+
+.device-summary-right {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.device-name-row {
+    display: flex;
+    align-items: center;
+}
+
+.device-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.cpu-info-row {
+    display: flex;
+    align-items: center;
+}
+
+.cpu-usage-summary {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 3px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    max-width: 180px; /* 增加最大宽度 */
+    width: 100%; /* 允许填充可用空间 */
+}
+
+.cpu-label {
+    font-size: 9px;
+    color: var(--text-muted);
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.cpu-value {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--primary-color);
+    min-width: 25px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.mini-progress-bar {
+    width: 50px;
+    height: 2px;
+    background: var(--bg-dark);
+    border-radius: 1px;
+    overflow: hidden;
+    flex: 1; /* 允许进度条占用剩余空间 */
+    min-width: 30px; /* 设置最小宽度 */
+}
+
+.mini-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.mini-progress-fill.high {
+    background: linear-gradient(90deg, var(--danger-color), var(--warning-color));
+}
+
+.mini-progress-fill.medium {
+    background: linear-gradient(90deg, var(--warning-color), var(--success-color));
+}
+
+.expand-toggle-icon {
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+    transform: rotate(-90deg);
+}
+
+.expand-toggle-icon.expanded {
+    transform: rotate(0deg);
+}
+
+/* 设备详情视图（展开状态） */
+.device-details {
+    padding: 16px 20px 20px 20px;
+    border-top: 1px solid var(--border-color);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 2000px;
+    }
 }
 
 @keyframes slideUp {
@@ -295,7 +504,7 @@ body {
 }
 
 .device-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
 }
@@ -319,12 +528,15 @@ body {
 }
 
 .device-os-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1;
+    flex-shrink: 0;
 }
 
 .os-windows {
@@ -467,7 +679,48 @@ body {
     margin-bottom: 12px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 8px 12px;
+    background: rgba(118, 75, 162, 0.1);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(118, 75, 162, 0.3);
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.interfaces-title:hover {
+    background: rgba(118, 75, 162, 0.2);
+    border-color: rgba(118, 75, 162, 0.5);
+}
+
+.toggle-icon {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+    transform: rotate(-90deg);
+}
+
+.toggle-icon.expanded {
+    transform: rotate(0deg);
+}
+
+.interfaces-content {
+    margin-top: 8px;
+    max-height: 500px;
+    overflow-y: auto;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
 }
 
 .interface-card {
