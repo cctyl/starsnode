@@ -197,6 +197,15 @@ body {
     line-height: 1;
     /* 确保在 Android WebView 中有间距 */
     margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
 }
 
 .card-content {
@@ -298,6 +307,11 @@ body {
     /* 手机端汇总卡片间距保障 */
     .card-icon {
         margin-right: 10px !important;
+    }
+
+    .card-icon-img {
+        width: 28px;
+        height: 28px;
     }
 
     /* CPU卡片样式调整 */
@@ -428,6 +442,11 @@ body {
     /* 超小屏幕汇总卡片间距保障 */
     .card-icon {
         margin-right: 8px !important;
+    }
+
+    .card-icon-img {
+        width: 24px;
+        height: 24px;
     }
 
     .device-os-badge {
@@ -726,6 +745,16 @@ body {
 
 .os-linux {
     background: linear-gradient(135deg, #fcc624, #f57c00);
+    color: white;
+}
+
+.os-android {
+    background: linear-gradient(135deg, #3ddc84, #00c853);
+    color: white;
+}
+
+.os-mac {
+    background: linear-gradient(135deg, #555555, #333333);
     color: white;
 }
 

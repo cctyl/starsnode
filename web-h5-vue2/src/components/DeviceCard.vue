@@ -129,12 +129,16 @@ export default {
       const platform = this.device.osInfo?.platform?.toLowerCase() || '';
       if (platform.includes('windows')) return 'os-windows';
       if (platform.includes('linux')) return 'os-linux';
+      if (platform.includes('android')) return 'os-android';
+      if (platform.includes('darwin') || platform.includes('mac')) return 'os-mac';
       return 'os-other';
     },
     osBadgeText() {
       const platform = this.device.osInfo?.platform?.toLowerCase() || '';
-      if (platform.includes('windows')) return '🪟';
+      if (platform.includes('windows')) return '🏠';
       if (platform.includes('linux')) return '🐧';
+      if (platform.includes('android')) return '🤖';
+      if (platform.includes('darwin') || platform.includes('mac')) return '🍎';
       return '💻';
     },
     totalDisk() {

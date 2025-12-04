@@ -1,0 +1,24 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M2 4L2 11L11 12L11 3L2 4Z" fill="url(#windowsGradient1)"/>
+  <path d="M13 3L13 12L22 11L22 4L13 3Z" fill="url(#windowsGradient2)"/>
+  <path d="M2 13L2 20L11 19L11 10L2 13Z" fill="url(#windowsGradient3)"/>
+  <path d="M13 10L13 19L22 20L22 13L13 10Z" fill="url(#windowsGradient4)"/>
+  <defs>
+    <linearGradient id="windowsGradient1" x1="2" y1="3" x2="11" y2="12">
+      <stop offset="0%" stop-color="#00a4ef"/>
+      <stop offset="100%" stop-color="#0078d4"/>
+    </linearGradient>
+    <linearGradient id="windowsGradient2" x1="13" y1="3" x2="22" y2="12">
+      <stop offset="0%" stop-color="#00a4ef"/>
+      <stop offset="100%" stop-color="#0078d4"/>
+    </linearGradient>
+    <linearGradient id="windowsGradient3" x1="2" y1="10" x2="11" y2="20">
+      <stop offset="0%" stop-color="#00a4ef"/>
+      <stop offset="100%" stop-color="#0078d4"/>
+    </linearGradient>
+    <linearGradient id="windowsGradient4" x1="13" y1="10" x2="22" y2="20">
+      <stop offset="0%" stop-color="#00a4ef"/>
+      <stop offset="100%" stop-color="#0078d4"/>
+    </linearGradient>
+  </defs>
+</svg>
