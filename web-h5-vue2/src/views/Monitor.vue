@@ -1,12 +1,5 @@
 <template>
   <div class="container">
-    <!-- 页面标题 -->
-    <MonitorHeader
-      :connection-status="connectionStatus"
-      :connection-message="connectionMessage"
-      :last-update-time="lastUpdateTime"
-    />
-
     <!-- 汇总信息区域 -->
     <section class="summary-section">
       <h2 class="section-title">📈 数据汇总</h2>
@@ -27,7 +20,6 @@
 </template>
 
 <script>
-import MonitorHeader from '../components/MonitorHeader.vue';
 import SummaryCards from '../components/SummaryCards.vue';
 import HardwareCharts from '../components/HardwareCharts.vue';
 import DeviceList from '../components/DeviceList.vue';
@@ -36,7 +28,6 @@ import webSocketService from '../services/websocket.js';
 export default {
   name: 'MonitorView',
   components: {
-    MonitorHeader,
     SummaryCards,
     HardwareCharts,
     DeviceList
