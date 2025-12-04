@@ -35,6 +35,10 @@ body {
     font-size: 14px;
     line-height: 1.6;
     overflow-x: hidden;
+    /* 为移动设备添加安全区域 */
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 .container {
@@ -46,9 +50,9 @@ body {
 
 /* 设置按钮 */
 .settings-btn {
-    position: absolute;
-    top: 8px;
-    right: 16px;
+    position: fixed;
+    top: 30px;
+    right: calc(16px + env(safe-area-inset-right));
     width: 40px;
     height: 40px;
     border: none;
@@ -82,21 +86,12 @@ body {
         width: 36px;
         height: 36px;
         font-size: 16px;
-        top: 12px;
-        right: 16px;
+        top: 30px;
+        right: calc(16px + env(safe-area-inset-right));
     }
 }
 
-/* 超小屏幕优化 */
-@media (max-width: 360px) {
-    .settings-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 14px;
-        top: 10px;
-        right: 12px;
-    }
-}
+
 
 /* 头部样式 */
 .header {
@@ -1022,7 +1017,7 @@ body {
 /* 通知提示样式 */
 .notification {
     position: fixed;
-    top: 20px;
+    top: calc(20px + env(safe-area-inset-top));
     left: 50%;
     transform: translateX(-50%);
     padding: 12px 20px;
@@ -1100,9 +1095,9 @@ body {
 /* 手机端优化 */
 @media (max-width: 767px) {
     .notification {
-        top: 10px;
-        left: 16px;
-        right: 16px;
+        top: calc(10px + env(safe-area-inset-top));
+        left: calc(16px + env(safe-area-inset-left));
+        right: calc(16px + env(safe-area-inset-right));
         transform: none;
         max-width: none;
         font-size: 13px;

@@ -13,5 +13,6 @@ export default {
 <style>
 #app {
   min-height: 100vh;
+  padding-top: 20px;
 }
 </style>
