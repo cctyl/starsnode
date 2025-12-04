@@ -1,21 +1,23 @@
 <template>
   <div class="hardware-summary">
-    <div class="chart-card">
+    <div class="chart-card cpu-card">
       <h3 class="chart-title">CPU 核心数汇总</h3>
       <div class="stat-value">{{ summary.totalCpuCores }} 核心</div>
       <div class="stat-desc">平均使用率: {{ summary.avgCpuUsage }}%</div>
     </div>
 
-    <div class="chart-card">
-      <h3 class="chart-title">内存汇总</h3>
-      <div class="stat-value">{{ (summary.totalMemory / 1024).toFixed(2) }} GB</div>
-      <canvas ref="memoryChart"></canvas>
-    </div>
+    <div class="charts-row">
+      <div class="chart-card memory-card">
+        <h3 class="chart-title">内存汇总</h3>
+        <div class="stat-value">{{ (summary.totalMemory / 1024).toFixed(2) }} GB</div>
+        <canvas ref="memoryChart"></canvas>
+      </div>
 
-    <div class="chart-card">
-      <h3 class="chart-title">磁盘汇总</h3>
-      <div class="stat-value">{{ summary.totalDisk.toFixed(2) }} GB</div>
-      <canvas ref="diskChart"></canvas>
+      <div class="chart-card disk-card">
+        <h3 class="chart-title">磁盘汇总</h3>
+        <div class="stat-value">{{ summary.totalDisk.toFixed(2) }} GB</div>
+        <canvas ref="diskChart"></canvas>
+      </div>
     </div>
   </div>
 </template>

@@ -159,9 +159,75 @@ body {
 
 /* 硬件汇总 */
 .hardware-summary {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 16px;
+}
+
+/* 图表行容器 - 内存和磁盘汇总在同一行 */
+.charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* 手机端优化 */
+@media (max-width: 767px) {
+    .charts-row {
+        gap: 8px; /* 手机端减小间距 */
+    }
+
+    /* CPU卡片样式调整 */
+    .cpu-card {
+        padding: 16px;
+    }
+
+    /* 内存和磁盘卡片样式调整 - 适配手机端 */
+    .memory-card,
+    .disk-card {
+        padding: 12px;
+    }
+
+    /* 手机端字体大小调整 */
+    .cpu-card .chart-title {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .memory-card .chart-title,
+    .disk-card .chart-title {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+
+    .cpu-card .stat-value {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+
+    .memory-card .stat-value,
+    .disk-card .stat-value {
+        font-size: 16px;
+        margin-bottom: 4px;
+    }
+
+    .cpu-card .stat-desc {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .memory-card .stat-desc,
+    .disk-card .stat-desc {
+        font-size: 10px;
+        margin-bottom: 6px;
+    }
+
+    /* 手机端图表画布大小限制 */
+    .memory-card canvas,
+    .disk-card canvas {
+        max-height: 100px !important;
+        width: 100% !important;
+    }
 }
 
 .chart-card {
@@ -481,12 +547,68 @@ body {
         grid-template-columns: repeat(4, 1fr);
     }
 
+    /* 平板及以上设备：恢复为垂直布局 */
     .hardware-summary {
-        grid-template-columns: repeat(3, 1fr);
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .charts-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
     }
 
     .device-info-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* 平板及以上设备的字体恢复 */
+    .cpu-card .chart-title,
+    .memory-card .chart-title,
+    .disk-card .chart-title {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .cpu-card .stat-value,
+    .memory-card .stat-value,
+    .disk-card .stat-value {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .cpu-card .stat-desc,
+    .memory-card .stat-desc,
+    .disk-card .stat-desc {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    /* 平板及以上设备的图表画布恢复 */
+    .memory-card canvas,
+    .disk-card canvas {
+        max-height: none !important;
+        width: 100% !important;
+    }
+}
+
+/* 桌面端优化 */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1024px;
+        padding: 32px;
+    }
+
+    /* 桌面端可以并排显示所有三个图表 */
+    .hardware-summary {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .charts-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
     }
 }
 
