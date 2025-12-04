@@ -228,6 +228,11 @@ export default {
         return;
       }
 
+      // 如果是首次接收到设备数据，显示成功通知
+      if (this.devices.length === 0 && devices.length > 0) {
+        this.showNotification(`成功连接到 ${devices.length} 台设备`, 'success', 3000);
+      }
+
       this.devices = devices;
       this.updateTimestamp();
     },

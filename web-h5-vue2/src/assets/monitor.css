@@ -1018,3 +1018,109 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* 通知提示样式 */
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: slideInNotification 0.3s ease-out;
+    max-width: 90%;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+@keyframes slideInNotification {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.notification:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.notification.success {
+    background: linear-gradient(135deg, var(--success-color), #38a169);
+}
+
+.notification.error {
+    background: linear-gradient(135deg, var(--danger-color), #e53e3e);
+}
+
+.notification.warning {
+    background: linear-gradient(135deg, var(--warning-color), #dd6b20);
+}
+
+.notification.info {
+    background: linear-gradient(135deg, var(--info-color), #3182ce);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.notification-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 手机端优化 */
+@media (max-width: 767px) {
+    .notification {
+        top: 10px;
+        left: 16px;
+        right: 16px;
+        transform: none;
+        max-width: none;
+        font-size: 13px;
+        padding: 10px 16px;
+    }
+
+    .notification:hover {
+        transform: translateY(-2px);
+    }
+
+    @keyframes slideInNotification {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
