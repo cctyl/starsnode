@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import fi.iki.elonen.NanoHTTPD;
 import io.github.cctyl.starnode.h5.utils.JsExecUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     private WebView webView;
     private JsExecUtil jsExecUtil;
-
+    // 定义一个本地端口，避免与系统服务冲突
+    private static final int LOCAL_PORT = 8080;
+    private AssetsWebServer server;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -70,12 +73,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
-
+        // 启动本地服务器
+        startLocalWebServer();
         webviewInit();
         jsExecUtil = new JsExecUtil(webView);
         // 加载本地文件（确保文件在 assets 目录）
 //        webView.loadUrl("file:///android_asset/index.html");
-        webView.loadUrl("http://192.168.31.151:8080/");
+//        webView.loadUrl("http://192.168.31.151:8080/");
+        webView.loadUrl("http://localhost:" + LOCAL_PORT);
 
 
     }
@@ -90,8 +95,23 @@ public class MainActivity extends AppCompatActivity {
             webView.destroy();
             webView = null;
         }
-
+        // 停止服务器，释放资源
+        if (server != null) {
+            server.stop();
+        }
     }
+
+    private void startLocalWebServer() {
+        try {
+            server = new AssetsWebServer(this, LOCAL_PORT);
+            server.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false); // 启动服务器，非守护模式
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 处理启动失败，例如端口被占用
+        }
+    }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
