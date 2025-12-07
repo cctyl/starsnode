@@ -160,3 +160,6 @@ build
 
 Android/app/release/**
 Android/app/debug/**
+android-h5/app/src/main/assets
+android-h5/app/debug/**
+android-h5/app/release/**
