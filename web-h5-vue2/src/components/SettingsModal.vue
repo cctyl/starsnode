@@ -89,7 +89,7 @@ export default {
   },
   data() {
     return {
-      wsUrl: '',
+      wsUrl: 'ws://10.0.8.1:6080/?token=abcdef&type=view&endpointName=web-access',
       reconnectInterval: 5,
       autoReconnect: true,
       errorMessage: ''
