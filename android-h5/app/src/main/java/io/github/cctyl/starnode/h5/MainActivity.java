@@ -159,30 +159,30 @@ public class MainActivity extends AppCompatActivity {
                 //);
             }
 
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                String url = request.getUrl().toString();
-
-                // 处理本地 asset 文件的 MIME 类型
-                if (url.startsWith("file:///android_asset/")) {
-                    String mimeType = getMimeType(url);
-                    try {
-                        InputStream inputStream = getAssets().open(url.replace("file:///android_asset/", ""));
-                        return new WebResourceResponse(mimeType, "UTF-8", inputStream);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return super.shouldInterceptRequest(view, request);
-            }
-
-            private String getMimeType(String url) {
-                if (url.endsWith(".js")) return "application/javascript";
-                if (url.endsWith(".css")) return "text/css";
-                if (url.endsWith(".html")) return "text/html";
-                if (url.endsWith(".json")) return "application/json";
-                return "text/plain";
-            }
+//            @Override
+//            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+//                String url = request.getUrl().toString();
+//
+//                // 处理本地 asset 文件的 MIME 类型
+//                if (url.startsWith("file:///android_asset/")) {
+//                    String mimeType = getMimeType(url);
+//                    try {
+//                        InputStream inputStream = getAssets().open(url.replace("file:///android_asset/", ""));
+//                        return new WebResourceResponse(mimeType, "UTF-8", inputStream);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                return super.shouldInterceptRequest(view, request);
+//            }
+//
+//            private String getMimeType(String url) {
+//                if (url.endsWith(".js")) return "application/javascript";
+//                if (url.endsWith(".css")) return "text/css";
+//                if (url.endsWith(".html")) return "text/html";
+//                if (url.endsWith(".json")) return "application/json";
+//                return "text/plain";
+//            }
 
         });
         // 添加 JS 接口，"Android" 是接口名，JS 中通过这个名称调用
